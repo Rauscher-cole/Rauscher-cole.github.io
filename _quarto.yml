@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "Cole Rauscher"
+  title: "Cole Rauscher - Data Science & Marketing"
   navbar:
     right:
       - href: projects.qmd
