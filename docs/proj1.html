@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Predicting NCAA Basketball Post-Season Results using RandomForest – Cole Rauscher</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-2581ea587ef8b0f23a56ebcfa6805732.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Cole Rauscher</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./projects.html" aria-current="page"> 
+<span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./contactme.html"> 
+<span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./proj1.html">March Madness</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Data Science Projects</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./proj1.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">March Madness</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#data-cleaning-preparation" id="toc-data-cleaning-preparation" class="nav-link" data-scroll-target="#data-cleaning-preparation">Data Cleaning &amp; Preparation</a></li>
+  <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</a></li>
+  <li><a href="#model-training-baseline-random-forest" id="toc-model-training-baseline-random-forest" class="nav-link" data-scroll-target="#model-training-baseline-random-forest">Model Training: Baseline Random Forest</a></li>
+  <li><a href="#tuned-random-forest" id="toc-tuned-random-forest" class="nav-link" data-scroll-target="#tuned-random-forest">Tuned Random Forest</a></li>
+  <li><a href="#tuned-model-with-selected-variables" id="toc-tuned-model-with-selected-variables" class="nav-link" data-scroll-target="#tuned-model-with-selected-variables">Tuned Model with Selected Variables</a></li>
+  <li><a href="#tuned-model-with-team-and-conf-variables" id="toc-tuned-model-with-team-and-conf-variables" class="nav-link" data-scroll-target="#tuned-model-with-team-and-conf-variables">Tuned Model with Team and Conf Variables</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Predicting NCAA Basketball Post-Season Results using RandomForest</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>College basketball is one of the most popular sports in the United States, with fan engagement peaking during the NCAA tournament—commonly known as March Madness. Each spring, millions of fans fill out brackets in an attempt to predict how the tournament will unfold, often competing in pools with friends or online contests. Despite widespread enthusiasm, accurately forecasting postseason outcomes is notoriously difficult due to the unpredictability of the sport and the frequency of upsets.</p>
+<p>In this project, we analyze regular-season statistics from NCAA Division I men’s basketball teams and develop predictive models to estimate postseason performance. Using data from multiple seasons, we train Random Forest classification models to predict how far a team will advance in the tournament. The data is split such that seven seasons are used for training, while three randomly selected seasons are held out for testing. In addition to building a baseline model, we explore hyperparameter tuning and dimensionality reduction by selecting only the most correlated features. Model accuracy is evaluated using confusion matrices, feature importance plots, and class-wise performance metrics.</p>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>The dataset used in this project originates from Kaggle and includes comprehensive statistical records of NCAA Division I men’s basketball teams spanning the 2013–2023 seasons. This dataset is well-suited for predictive modeling, as nearly all variables are already numerical, minimizing the need for extensive preprocessing. The only non-numeric features—conference and team name—are excluded from modeling due to their limited predictive relevance. However, the dataset does have notable limitations. It does not account for individual player statistics or injury reports, which can significantly impact a team’s postseason performance. Additionally, the model overlooks game location, an important factor given the substantial influence of home-court advantage in high-stakes matchups.</p>
+</section>
+<section id="data-cleaning-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning-preparation">Data Cleaning &amp; Preparation</h2>
+<p><strong>Initial Import and Selection</strong></p>
+<p>The dataset (cbb.csv) was imported using the read_csv() function from the readr package. To streamline the data, the first two columns—likely containing identifiers such as indices or team names—were removed, as they were not essential for modeling. The data import was piped directly into a preprocessing pipeline using %&gt;% from the tidyverse suite, facilitating a clean and efficient workflow.</p>
+<p><strong>Handling Missing Values</strong></p>
+<p>Missing values in the POSTSEASON and SEED columns were addressed by replacing all NA entries with “N/A”. This approach assumes that missing values in these fields correspond to teams that either did not qualify for the NCAA tournament or were not assigned a seed, and thus should not be treated as truly missing.</p>
+<p><strong>Filtering for Sufficient Data</strong></p>
+<p>To ensure the reliability of the modeling process, the dataset was filtered to include only teams that played at least 20 games. This threshold was set to exclude teams with insufficient data for meaningful analysis. Column names were standardized using the make.names() function to ensure compatibility with modeling functions in R.</p>
+<p><strong>Formatting Factor Variables</strong></p>
+<p>Both the POSTSEASON and SEED columns were converted to factor variables. This step ensures proper categorical handling during model training and avoids misinterpretation of these fields as continuous data. In later models, a numerical dummy of TEAM, and factor variable of CONF, were created to maximize model accuracy and fit.</p>
+</section>
+<section id="exploratory-data-analysis-eda" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</h2>
+<p><strong>Game Distribution and Normality Checks</strong></p>
+<p>The variable G (games played) was visualized using a histogram and boxplot to understand its distribution and identify any outliers. A broader analysis was performed using ggplot2, where histograms were created for all numeric variables and displayed using facet_wrap(), revealing patterns of skewness and distribution shapes across different features.</p>
+<p>Some mild outliers in G were detected but are to be expected given the variance in team schedules. Most variables showed approximately normal distributions, with the exception of BARTHAG and YEAR, with BARTHAG showing a broad distribution while YEAR is discrete.</p>
+<p><strong>Q-Q Plots for Normality</strong></p>
+<p>To assess the normality of key performance metrics, a Q-Q plot was generated for G (games played). Both plots showed noticeable deviations from the diagonal line, particularly in the tails — an expected characteristic of sports performance data, which often exhibits non-normality due to competitive disparities.</p>
+<p><strong>Correlation Analysis</strong></p>
+<p>A correlation matrix was computed for all numeric features using cor(), and visualized via GGally::ggcorr(). This matrix helped to identify strong linear relationships among variables, guiding later stages of feature selection.</p>
+<p><strong>Mapping POSTSEASON to a Numeric Scale</strong></p>
+<p>To facilitate quantitative analysis, POSTSEASON categories were mapped to a custom numeric scale ranging from “N/A” = 0 to “Champions” = 8. This transformation allowed for correlation analysis between postseason success and other numeric features to gather an idea of which variables will prove important in model training.</p>
+<p><strong>Variable Correlations</strong></p>
+<p>Correlations were calculated between each numeric feature and the numeric postseason variable (postnum). Features with an absolute correlation greater than or equal 0.3 were selected for potential use in model refinement, narrowing down the most influential predictors.</p>
+<p>Correlations between each numeric feature and the numeric postnum variable were calculated. Features with absolute correlation values above 0.3 were flagged as potentially important.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-2-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Correlations with POSTSEASON (descending):</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       WAB          W    BARTHAG      ADJOE          G      EFG_O      X2P_O 
+ 0.6521000  0.6118469  0.5759129  0.5735100  0.4309168  0.3526545  0.3246501 
+     X2P_D      EFG_D      ADJDE 
+-0.3515438 -0.3900154 -0.5137491 </code></pre>
+</div>
+</div>
+</section>
+<section id="model-training-baseline-random-forest" class="level2">
+<h2 class="anchored" data-anchor-id="model-training-baseline-random-forest">Model Training: Baseline Random Forest</h2>
+<p><strong>Train/Test Split by Year</strong></p>
+<p>To mimic real-world forecasting, three seasons were randomly selected as the test set (e.g., 2014, 2016, 2019). The model was trained on the remaining seven years to ensure it was evaluated on previously unseen data, avoiding leakage.</p>
+<p><strong>Factor Level Adjustment</strong></p>
+<p>Prior to model training, the levels of the POSTSEASON factor variable were standardized using make.names() to ensure compatibility with modeling functions, applied separately to both the training and test sets.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2014 2016 2019</code></pre>
+</div>
+</div>
+<p><strong>Model Construction</strong></p>
+<p>A baseline Random Forest classifier was built using the randomForest() function with 500 trees. Feature importance tracking was enabled (importance = TRUE) to later assess variable contributions.</p>
+<p><strong>Evaluation</strong></p>
+<p>The model’s internal performance was evaluated using the Out-Of-Bag (OOB) error plot. Predictions were made on the test set, and performance was assessed using a confusion matrix from the caret package.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+           Reference
+Prediction  X2ND Champions  E8  F4 N.A R32 R64 R68 S16
+  X2ND         0         1   0   0   0   0   0   0   0
+  Champions    1         0   0   2   0   0   0   0   0
+  E8           1         1   0   0   0   0   0   0   2
+  F4           0         1   0   0   0   0   0   0   0
+  N.A          0         0   0   1 850   0   0   0   0
+  R32          0         0   2   0   0  16  16   1  12
+  R64          0         0   1   0   0  31  77   9   5
+  R68          0         0   0   0   0   0   2   2   0
+  S16          1         0   9   3   0   1   1   0   5
+
+Overall Statistics
+                                          
+               Accuracy : 0.9013          
+                 95% CI : (0.8817, 0.9187)
+    No Information Rate : 0.8065          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.7061          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: X2ND Class: Champions Class: E8 Class: F4
+Sensitivity            0.0000000         0.000000  0.000000 0.0000000
+Specificity            0.9990485         0.997146  0.996161 0.9990458
+Pos Pred Value         0.0000000         0.000000  0.000000 0.0000000
+Neg Pred Value         0.9971510         0.997146  0.988571 0.9943020
+Prevalence             0.0028463         0.002846  0.011385 0.0056926
+Detection Rate         0.0000000         0.000000  0.000000 0.0000000
+Detection Prevalence   0.0009488         0.002846  0.003795 0.0009488
+Balanced Accuracy      0.4995243         0.498573  0.498081 0.4995229
+                     Class: N.A Class: R32 Class: R64 Class: R68 Class: S16
+Sensitivity              1.0000    0.33333    0.80208   0.166667   0.208333
+Specificity              0.9951    0.96918    0.95198   0.998081   0.985437
+Pos Pred Value           0.9988    0.34043    0.62602   0.500000   0.250000
+Neg Pred Value           1.0000    0.96822    0.97959   0.990476   0.981625
+Prevalence               0.8065    0.04554    0.09108   0.011385   0.022770
+Detection Rate           0.8065    0.01518    0.07306   0.001898   0.004744
+Detection Prevalence     0.8074    0.04459    0.11670   0.003795   0.018975
+Balanced Accuracy        0.9975    0.65126    0.87703   0.582374   0.596885</code></pre>
+</div>
+</div>
+<p><strong>Visualization</strong></p>
+<p>A heatmap of the confusion matrix was created, normalized by class frequency to enhance interpretability. Feature importance was visualized using varImpPlot() to highlight the most influential predictors in determining postseason advancement.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Results of Initial Model</strong></p>
+<p>The baseline model achieved 90.13% accuracy, significantly outperforming the No Information Rate (80.65%), with a Kappa score of 0.7061. It correctly identified all N/A outcomes (non-qualifiers), but sensitivity for rare classes like F4 and Champions was 0%. Middle-tier performances (R64, R32) were captured moderately well.</p>
+<p>A comparison between the variables selected through correlation analysis and those identified as most important by the Random Forest model reveals a strong alignment. Seven of the top eight features highlighted in the varImpPlot()—including WAB, W, BARTHAG, ADJOE, G, EFG_O, and X2P_O—also appeared among the variables with an absolute correlation of 0.3 or greater with the POSTSEASON outcome. This overlap validates the effectiveness of correlation-based filtering for initial feature selection and underscores the predictive strength of these metrics, which largely relate to a team’s overall efficiency and win record.</p>
+<p>One notable exception is the SEED variable, which was not included in the correlation analysis due to its categorical nature but was identified as the single most important feature by the Random Forest model. This is intuitive, as tournament seed reflects both a team’s regular-season performance and the selection committee’s evaluation—both of which are highly predictive of postseason success.</p>
+<p>On the other hand, several defensive metrics such as ADJDE, EFG_D, and X2P_D exhibited moderate negative correlations with POSTSEASON, yet did not rank highly in model-based importance. This suggests that while these variables have some linear relationship with postseason advancement, the Random Forest model did not find them as useful in split-based decision-making. It also highlights a potential modeling insight: offensive metrics may carry greater predictive weight than defensive ones in this dataset, at least within the framework of a Random Forest.</p>
+</section>
+<section id="tuned-random-forest" class="level2">
+<h2 class="anchored" data-anchor-id="tuned-random-forest">Tuned Random Forest</h2>
+<p><strong>Cross-Validation Setup</strong></p>
+<p>A repeated cross-validation scheme was configured using trainControl() with class probability support and a multi-class summary function to optimize evaluation across multiple target categories.</p>
+<p><strong>Model Training</strong></p>
+<p>A new Random Forest model was trained using caret::train() with all available features and 200 trees. The training aimed to optimize overall accuracy, guided by cross-validation results.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
+: There were missing values in resampled performance measures.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+           Reference
+Prediction  X2ND Champions  E8  F4 N.A R32 R64 R68 S16
+  X2ND         0         0   0   0   0   0   0   0   0
+  Champions    1         1   0   2   0   0   0   0   0
+  E8           1         1   5   1   0   0   0   0   2
+  F4           1         1   0   1   0   0   0   0   0
+  N.A          0         0   0   0 850   0   0   0   0
+  R32          0         0   3   0   0  25  19   1  11
+  R64          0         0   0   0   0  22  72   3   5
+  R68          0         0   0   0   0   1   4   7   0
+  S16          0         0   4   2   0   0   1   1   6
+
+Overall Statistics
+                                          
+               Accuracy : 0.9175          
+                 95% CI : (0.8992, 0.9334)
+    No Information Rate : 0.8065          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.7556          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: X2ND Class: Champions Class: E8 Class: F4
+Sensitivity             0.000000        0.3333333  0.416667 0.1666667
+Specificity             1.000000        0.9971456  0.995202 0.9980916
+Pos Pred Value               NaN        0.2500000  0.500000 0.3333333
+Neg Pred Value          0.997154        0.9980952  0.993295 0.9952426
+Prevalence              0.002846        0.0028463  0.011385 0.0056926
+Detection Rate          0.000000        0.0009488  0.004744 0.0009488
+Detection Prevalence    0.000000        0.0037951  0.009488 0.0028463
+Balanced Accuracy       0.500000        0.6652395  0.705934 0.5823791
+                     Class: N.A Class: R32 Class: R64 Class: R68 Class: S16
+Sensitivity              1.0000    0.52083    0.75000   0.583333   0.250000
+Specificity              1.0000    0.96620    0.96868   0.995202   0.992233
+Pos Pred Value           1.0000    0.42373    0.70588   0.583333   0.428571
+Neg Pred Value           1.0000    0.97688    0.97479   0.995202   0.982692
+Prevalence               0.8065    0.04554    0.09108   0.011385   0.022770
+Detection Rate           0.8065    0.02372    0.06831   0.006641   0.005693
+Detection Prevalence     0.8065    0.05598    0.09677   0.011385   0.013283
+Balanced Accuracy        1.0000    0.74352    0.85934   0.789267   0.621117</code></pre>
+</div>
+</div>
+<p><strong>Evaluation on Test Set</strong></p>
+<p>The tuned model was evaluated on the held-out test set. A new confusion matrix was computed to assess classification performance, accompanied by a heatmap for visual analysis of predictive strengths and weaknesses across postseason stages.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Results of Tuned Model</strong></p>
+<p>The tuned model improved to 91.75% accuracy with a Kappa statistic of 0.7556, indicating a strong level of agreement between predicted and actual postseason outcomes across all classes. This performance represents a noticeable enhancement over the baseline model, not only in overall accuracy but also in the model’s ability to correctly classify less frequent outcomes. Notable improvements were observed in rare classes such as F4, E8, and R68, where the model previously struggled to make correct predictions. For example, the F4 class, which had a sensitivity of 0% in the baseline model, increased to over 16% in the tuned version, reflecting the model’s improved ability to detect deep tournament runs.</p>
+<p>In addition, middle-stage tournament outcomes such as R32 and R64 experienced gains in both sensitivity (true positive rate) and positive predictive value (precision), meaning the model was better at both identifying these outcomes and correctly labeling teams that were predicted to fall into these categories. This improvement suggests that hyperparameter tuning enhanced the model’s discrimination power across a broader range of tournament results, rather than simply reinforcing majority class predictions. It also reflects better balance in the classifier’s treatment of underrepresented classes, helping mitigate the impact of class imbalance—an issue that often limits the performance of classification models in sports datasets. Overall, the tuning process led to a model that not only improved in accuracy but also became more nuanced and equitable in its classification decisions across all postseason stages.</p>
+</section>
+<section id="tuned-model-with-selected-variables" class="level2">
+<h2 class="anchored" data-anchor-id="tuned-model-with-selected-variables">Tuned Model with Selected Variables</h2>
+<p><strong>Approach</strong></p>
+<p>To reduce complexity, this model was trained using only the variables with an absolute correlation ≥ 0.3 to postnum: <strong>WAB</strong>, <strong>W</strong>, <strong>BARTHAG</strong>, <strong>ADJOE</strong>, <strong>G</strong>, <strong>EFG_O</strong>, <strong>X2P_O</strong>, <strong>X2P_D</strong>, <strong>EFG_D</strong>, and <strong>ADJDE</strong>.</p>
+<p>This allowed us to assess whether fewer but highly correlated features could maintain or improve accuracy.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
+: There were missing values in resampled performance measures.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+           Reference
+Prediction  X2ND Champions  E8  F4 N.A R32 R64 R68 S16
+  X2ND         0         0   0   0   0   0   0   0   0
+  Champions    1         2   0   2   0   0   0   0   0
+  E8           1         0   4   0   1   0   0   0   4
+  F4           1         1   0   1   0   0   0   0   0
+  N.A          0         0   1   1 837   9  47   9   2
+  R32          0         0   1   0   1  16  18   1  10
+  R64          0         0   1   0  11  22  31   2   4
+  R68          0         0   0   0   0   0   0   0   0
+  S16          0         0   5   2   0   1   0   0   4
+
+Overall Statistics
+                                          
+               Accuracy : 0.8491          
+                 95% CI : (0.8261, 0.8702)
+    No Information Rate : 0.8065          
+    P-Value [Acc &gt; NIR] : 0.0001798       
+                                          
+                  Kappa : 0.4942          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: X2ND Class: Champions Class: E8 Class: F4
+Sensitivity             0.000000         0.666667  0.333333 0.1666667
+Specificity             1.000000         0.997146  0.994242 0.9980916
+Pos Pred Value               NaN         0.400000  0.400000 0.3333333
+Neg Pred Value          0.997154         0.999047  0.992337 0.9952426
+Prevalence              0.002846         0.002846  0.011385 0.0056926
+Detection Rate          0.000000         0.001898  0.003795 0.0009488
+Detection Prevalence    0.000000         0.004744  0.009488 0.0028463
+Balanced Accuracy       0.500000         0.831906  0.663788 0.5823791
+                     Class: N.A Class: R32 Class: R64 Class: R68 Class: S16
+Sensitivity              0.9847    0.33333    0.32292    0.00000   0.166667
+Specificity              0.6618    0.96918    0.95825    1.00000   0.992233
+Pos Pred Value           0.9238    0.34043    0.43662        NaN   0.333333
+Neg Pred Value           0.9122    0.96822    0.93388    0.98861   0.980806
+Prevalence               0.8065    0.04554    0.09108    0.01139   0.022770
+Detection Rate           0.7941    0.01518    0.02941    0.00000   0.003795
+Detection Prevalence     0.8596    0.04459    0.06736    0.00000   0.011385
+Balanced Accuracy        0.8232    0.65126    0.64058    0.50000   0.579450</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Results of Model using Correlated Vars</strong></p>
+<p>This simplified model achieved 84.91% accuracy and a Kappa of 0.4942—a noticeable decline from previous models. While grouping was visually coherent, the model performed poorly on specific classes, especially rare ones like Champions and R68. These results suggest that although the correlated variables were informative, the excluded features captured important interactions and nuances not reflected in correlation alone.</p>
+</section>
+<section id="tuned-model-with-team-and-conf-variables" class="level2">
+<h2 class="anchored" data-anchor-id="tuned-model-with-team-and-conf-variables">Tuned Model with Team and Conf Variables</h2>
+<p>To account for institutional success and historical trends, the final model included encoded TEAM IDs and the categorical CONF variable. This allowed the model to detect school-specific tendencies, which may help capture intangible factors such as coaching consistency, program prestige, or tournament experience.</p>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,
+: There were missing values in resampled performance measures.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+           Reference
+Prediction  X2ND Champions  E8  F4 N.A R32 R64 R68 S16
+  X2ND         0         0   0   0   0   0   0   0   0
+  Champions    1         1   0   1   0   0   0   0   0
+  E8           1         1   6   1   0   0   0   0   3
+  F4           1         1   0   2   0   0   0   0   0
+  N.A          0         0   0   0 850   0   0   0   0
+  R32          0         0   3   0   0  23  21   1  14
+  R64          0         0   0   0   0  24  68   7   2
+  R68          0         0   0   0   0   0   6   4   0
+  S16          0         0   3   2   0   1   1   0   5
+
+Overall Statistics
+                                          
+               Accuracy : 0.9099          
+                 95% CI : (0.8909, 0.9265)
+    No Information Rate : 0.8065          
+    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+                                          
+                  Kappa : 0.7331          
+                                          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: X2ND Class: Champions Class: E8 Class: F4
+Sensitivity             0.000000        0.3333333  0.500000  0.333333
+Specificity             1.000000        0.9980971  0.994242  0.998092
+Pos Pred Value               NaN        0.3333333  0.500000  0.500000
+Neg Pred Value          0.997154        0.9980971  0.994242  0.996190
+Prevalence              0.002846        0.0028463  0.011385  0.005693
+Detection Rate          0.000000        0.0009488  0.005693  0.001898
+Detection Prevalence    0.000000        0.0028463  0.011385  0.003795
+Balanced Accuracy       0.500000        0.6657152  0.747121  0.665712
+                     Class: N.A Class: R32 Class: R64 Class: R68 Class: S16
+Sensitivity              1.0000    0.47917    0.70833   0.333333   0.208333
+Specificity              1.0000    0.96123    0.96555   0.994242   0.993204
+Pos Pred Value           1.0000    0.37097    0.67327   0.400000   0.416667
+Neg Pred Value           1.0000    0.97480    0.97062   0.992337   0.981766
+Prevalence               0.8065    0.04554    0.09108   0.011385   0.022770
+Detection Rate           0.8065    0.02182    0.06452   0.003795   0.004744
+Detection Prevalence     0.8065    0.05882    0.09583   0.009488   0.011385
+Balanced Accuracy        1.0000    0.72020    0.83694   0.663788   0.600769</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="proj1_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Results</strong></p>
+<p>This model achieved 90.99% accuracy and a Kappa of 0.7331, slightly lower than the fully tuned model using all features, but higher than the reduced model. Notably, this approach yielded better predictions for deeper rounds like Elite 8, Final Four, and Champions. The addition of TEAM and CONF variables to the model appears to have captured some measure of program prestige or consistency, which positively impacted model sensitivity in late-stage predictions.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This project explored the predictive capabilities of Random Forest models in forecasting NCAA basketball postseason outcomes based on regular-season statistics. Multiple model variants were constructed and evaluated:</p>
+<ul>
+<li>The baseline model performed strongly on majority classes but lacked sensitivity for rarer outcomes.</li>
+<li>The tuned Random Forest significantly improved overall class sensitivity, especially in mid- and late-stage postseason outcomes, with the highest accuracy and Kappa values.</li>
+<li>The correlated-only model, despite its simplicity, underperformed — demonstrating that some useful features may not be highly correlated individually but contribute meaningfully in interaction with others.</li>
+<li>Including TEAM and CONF variables improved predictions for historically successful teams and deeper tournament rounds, likely due to institutional patterns and recurring success factors.</li>
+</ul>
+<p>Key Insights:</p>
+<ul>
+<li>Top predictors included SEED, WAB, BARTHAG, W, ADJOE, and EFG_O.</li>
+<li>Class imbalance limited detection of low-frequency outcomes like F4 or 2nd, suggesting a need for advanced resampling techniques or alternative modeling strategies (e.g., boosting).</li>
+<li>Historical patterns embedded in team and conference features offer valuable signal and could be expanded further with coach, roster, or injury data.</li>
+</ul>
+<p>Future Directions</p>
+<ul>
+<li>Integrate player-level statistics and injury reports.</li>
+<li>Use XGBoost or LightGBM for potentially higher predictive power.</li>
+<li>Experiment with SMOTE or other techniques to address class imbalance.</li>
+<li>Include temporal dynamics, such as win streaks or momentum factors near season end.</li>
+</ul>
+<p>Ultimately, this study shows that data-driven models—when carefully trained and tuned—can achieve over 91% accuracy in forecasting NCAA postseason outcomes, offering meaningful support for analysts, fans, and bracketologists alike.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

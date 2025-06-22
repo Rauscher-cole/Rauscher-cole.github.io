@@ -1,0 +1,12 @@
+---
+title: "Data Science Projects"
+---
+
+
+**This is where I will showcase my projects that I have done**
+
+- [March Madness Predictions with Random Forest](proj1.qmd)
+- climate change visualizations
+- custom xgboost implementation
+- Spatiotemporal crime analysis in Buffalo
+

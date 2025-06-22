@@ -1,1 +1,6 @@
 /* css styles */
+/* Make website title bold */
+.navbar-brand {
+  font-family: 'Georgia', serif;  /* or any other font */
+  font-size: 1.5rem;  /* optional */
+}

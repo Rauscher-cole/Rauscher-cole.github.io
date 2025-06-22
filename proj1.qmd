@@ -1,0 +1,358 @@
+---
+title: "Predicting NCAA Basketball Post-Season Results using RandomForest"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(caret)
+library(randomForest)
+library(pROC)
+library(MLmetrics)
+library(GGally)
+library(ggfortify)
+```
+
+## Introduction
+
+College basketball is one of the most popular sports in the United States, with fan engagement peaking during the NCAA tournament—commonly known as March Madness. Each spring, millions of fans fill out brackets in an attempt to predict how the tournament will unfold, often competing in pools with friends or online contests. Despite widespread enthusiasm, accurately forecasting postseason outcomes is notoriously difficult due to the unpredictability of the sport and the frequency of upsets.
+
+In this project, we analyze regular-season statistics from NCAA Division I men's basketball teams and develop predictive models to estimate postseason performance. Using data from multiple seasons, we train Random Forest classification models to predict how far a team will advance in the tournament. The data is split such that seven seasons are used for training, while three randomly selected seasons are held out for testing. In addition to building a baseline model, we explore hyperparameter tuning and dimensionality reduction by selecting only the most correlated features. Model accuracy is evaluated using confusion matrices, feature importance plots, and class-wise performance metrics.
+
+## Background
+
+The dataset used in this project originates from Kaggle and includes comprehensive statistical records of NCAA Division I men’s basketball teams spanning the 2013–2023 seasons. This dataset is well-suited for predictive modeling, as nearly all variables are already numerical, minimizing the need for extensive preprocessing. The only non-numeric features—conference and team name—are excluded from modeling due to their limited predictive relevance. However, the dataset does have notable limitations. It does not account for individual player statistics or injury reports, which can significantly impact a team's postseason performance. Additionally, the model overlooks game location, an important factor given the substantial influence of home-court advantage in high-stakes matchups.
+
+## Data Cleaning & Preparation
+
+**Initial Import and Selection**
+
+The dataset (cbb.csv) was imported using the read_csv() function from the readr package. To streamline the data, the first two columns—likely containing identifiers such as indices or team names—were removed, as they were not essential for modeling. The data import was piped directly into a preprocessing pipeline using %\>% from the tidyverse suite, facilitating a clean and efficient workflow.
+
+**Handling Missing Values**
+
+Missing values in the POSTSEASON and SEED columns were addressed by replacing all NA entries with "N/A". This approach assumes that missing values in these fields correspond to teams that either did not qualify for the NCAA tournament or were not assigned a seed, and thus should not be treated as truly missing.
+
+**Filtering for Sufficient Data**
+
+To ensure the reliability of the modeling process, the dataset was filtered to include only teams that played at least 20 games. This threshold was set to exclude teams with insufficient data for meaningful analysis. Column names were standardized using the make.names() function to ensure compatibility with modeling functions in R.
+
+**Formatting Factor Variables**
+
+Both the POSTSEASON and SEED columns were converted to factor variables. This step ensures proper categorical handling during model training and avoids misinterpretation of these fields as continuous data. In later models, a numerical dummy of TEAM, and factor variable of CONF, were created to maximize model accuracy and fit.
+
+```{r, include=FALSE}
+data_orig <- read_csv("C:\\Users\\colem\\OneDrive\\Documents\\RDirectory\\folyfe\\cbb.csv") %>% 
+  mutate(
+    POSTSEASON = replace_na(POSTSEASON, "N/A"),
+    SEED = replace_na(SEED, "N/A")
+  )
+data <- data_orig %>% 
+    select(-1, -2) %>% 
+  filter(G >= 20) %>% 
+  rename_with(make.names) %>% 
+  mutate(
+    POSTSEASON = factor(POSTSEASON),
+    SEED = factor(SEED)
+  )
+```
+
+## Exploratory Data Analysis (EDA)
+
+**Game Distribution and Normality Checks**
+
+The variable G (games played) was visualized using a histogram and boxplot to understand its distribution and identify any outliers. A broader analysis was performed using ggplot2, where histograms were created for all numeric variables and displayed using facet_wrap(), revealing patterns of skewness and distribution shapes across different features.
+
+Some mild outliers in G were detected but are to be expected given the variance in team schedules. Most variables showed approximately normal distributions, with the exception of BARTHAG and YEAR, with BARTHAG showing a broad distribution while YEAR is discrete.
+
+**Q-Q Plots for Normality**
+
+To assess the normality of key performance metrics, a Q-Q plot was generated for G (games played). Both plots showed noticeable deviations from the diagonal line, particularly in the tails — an expected characteristic of sports performance data, which often exhibits non-normality due to competitive disparities.
+
+**Correlation Analysis**
+
+A correlation matrix was computed for all numeric features using cor(), and visualized via GGally::ggcorr(). This matrix helped to identify strong linear relationships among variables, guiding later stages of feature selection.
+
+**Mapping POSTSEASON to a Numeric Scale**
+
+To facilitate quantitative analysis, POSTSEASON categories were mapped to a custom numeric scale ranging from "N/A" = 0 to "Champions" = 8. This transformation allowed for correlation analysis between postseason success and other numeric features to gather an idea of which variables will prove important in model training.
+
+**Variable Correlations**
+
+Correlations were calculated between each numeric feature and the numeric postseason variable (postnum). Features with an absolute correlation greater than or equal 0.3 were selected for potential use in model refinement, narrowing down the most influential predictors.
+
+Correlations between each numeric feature and the numeric postnum variable were calculated. Features with absolute correlation values above 0.3 were flagged as potentially important.
+
+```{r, echo=FALSE}
+hist(data$G)
+boxplot(data$G)
+numeric_vars <- select(data, where(is.numeric))
+ggplot(gather(numeric_vars), aes(value)) + 
+  geom_histogram(bins = 30) + 
+  facet_wrap(~key, scales = 'free') + 
+  theme_minimal()
+
+# Q-Q Plots
+ggplot(data, aes(sample = G)) + 
+  stat_qq() + stat_qq_line() + ggtitle("Q-Q Plot for G") + theme_minimal()
+post_map <- c("N/A" = 0, "R68" = 1, "R64" = 2, "R32" = 3, "S16" = 4, "E8" = 5, "F4" = 6, "2ND" = 7, "Champions" = 8)
+postnum <- as.numeric(post_map[as.character(data$POSTSEASON)])
+#calculate correlation of EACH numeric feature to postnum
+cor_vals <- sapply(numeric_vars, function(x) cor(x, postnum, use = "complete.obs"))
+
+# Set threshold (can be 0.5 or lower like 0.3 if you want more vars)
+cor_related_vars <- names(cor_vals[abs(cor_vals) >= 0.3])
+
+# Correlation matrix
+numeric_vars$postnum <- as.numeric(post_map[as.character(data$POSTSEASON)])
+numeric_cor <- cor(numeric_vars, use = "complete.obs")
+GGally::ggcorr(numeric_cor, label = TRUE)
+
+# Optional: Print all correlations sorted
+cat("Correlations with POSTSEASON (descending):\n")
+print(sort(cor_vals[cor_related_vars], decreasing = TRUE))
+```
+
+## Model Training: Baseline Random Forest
+
+**Train/Test Split by Year**
+
+To mimic real-world forecasting, three seasons were randomly selected as the test set (e.g., 2014, 2016, 2019). The model was trained on the remaining seven years to ensure it was evaluated on previously unseen data, avoiding leakage.
+
+**Factor Level Adjustment**
+
+Prior to model training, the levels of the POSTSEASON factor variable were standardized using make.names() to ensure compatibility with modeling functions, applied separately to both the training and test sets.
+
+```{r, echo=FALSE}
+all_years <- sort(unique(data$YEAR))
+set.seed(256)
+test_years <- sample(all_years, 3)
+test_years
+train <- data %>% filter(!(YEAR %in% test_years))
+test <- data %>% filter(YEAR %in% test_years)
+levels(train$POSTSEASON) <- make.names(levels(train$POSTSEASON))
+levels(test$POSTSEASON) <- make.names(levels(test$POSTSEASON))
+```
+
+**Model Construction**
+
+A baseline Random Forest classifier was built using the randomForest() function with 500 trees. Feature importance tracking was enabled (importance = TRUE) to later assess variable contributions.
+
+**Evaluation**
+
+The model’s internal performance was evaluated using the Out-Of-Bag (OOB) error plot. Predictions were made on the test set, and performance was assessed using a confusion matrix from the caret package.
+
+```{r, echo=FALSE}
+rf_baseline <- randomForest(
+  POSTSEASON ~ ., data = train, ntree = 500, importance = TRUE)
+plot(rf_baseline)
+
+pred <- predict(rf_baseline, newdata = test)
+conf <- confusionMatrix(pred, test$POSTSEASON)
+print(conf)
+```
+
+**Visualization**
+
+A heatmap of the confusion matrix was created, normalized by class frequency to enhance interpretability. Feature importance was visualized using varImpPlot() to highlight the most influential predictors in determining postseason advancement.
+
+```{r, echo=FALSE}
+cm <- as.data.frame(conf$table)
+total_by_class <- cm %>% group_by(Reference) %>% summarise(total = sum(Freq))
+cm <- left_join(cm, total_by_class, by = "Reference")
+cm$RelFreq <- cm$Freq / cm$total
+
+ggplot(cm, aes(Prediction, Reference, fill = RelFreq)) +
+  geom_tile() + geom_text(aes(label = Freq), color = "black") +
+  scale_fill_gradient(low = "white", high = "red") + theme_minimal()
+
+varImpPlot(rf_baseline, main = "Feature Importance")
+```
+
+**Results of Initial Model**
+
+The baseline model achieved 90.13% accuracy, significantly outperforming the No Information Rate (80.65%), with a Kappa score of 0.7061. It correctly identified all N/A outcomes (non-qualifiers), but sensitivity for rare classes like F4 and Champions was 0%. Middle-tier performances (R64, R32) were captured moderately well.
+
+A comparison between the variables selected through correlation analysis and those identified as most important by the Random Forest model reveals a strong alignment. Seven of the top eight features highlighted in the varImpPlot()—including WAB, W, BARTHAG, ADJOE, G, EFG_O, and X2P_O—also appeared among the variables with an absolute correlation of 0.3 or greater with the POSTSEASON outcome. This overlap validates the effectiveness of correlation-based filtering for initial feature selection and underscores the predictive strength of these metrics, which largely relate to a team's overall efficiency and win record.
+
+One notable exception is the SEED variable, which was not included in the correlation analysis due to its categorical nature but was identified as the single most important feature by the Random Forest model. This is intuitive, as tournament seed reflects both a team’s regular-season performance and the selection committee’s evaluation—both of which are highly predictive of postseason success.
+
+On the other hand, several defensive metrics such as ADJDE, EFG_D, and X2P_D exhibited moderate negative correlations with POSTSEASON, yet did not rank highly in model-based importance. This suggests that while these variables have some linear relationship with postseason advancement, the Random Forest model did not find them as useful in split-based decision-making. It also highlights a potential modeling insight: offensive metrics may carry greater predictive weight than defensive ones in this dataset, at least within the framework of a Random Forest.
+
+## Tuned Random Forest
+
+**Cross-Validation Setup**
+
+A repeated cross-validation scheme was configured using trainControl() with class probability support and a multi-class summary function to optimize evaluation across multiple target categories.
+
+**Model Training**
+
+A new Random Forest model was trained using caret::train() with all available features and 200 trees. The training aimed to optimize overall accuracy, guided by cross-validation results.
+
+```{r, echo=FALSE}
+control <- trainControl(
+  method = "repeatedcv", number = 5, repeats = 3, classProbs = TRUE, summaryFunction = multiClassSummary)
+
+rf_tuned <- train(
+  POSTSEASON ~ ., data = train, method = "rf",
+  metric = "Accuracy", trControl = control, ntree = 200)
+
+plot(rf_tuned)
+pred <- predict(rf_tuned, newdata = test)
+conf <- confusionMatrix(pred, test$POSTSEASON)
+print(conf)
+```
+
+**Evaluation on Test Set**
+
+The tuned model was evaluated on the held-out test set. A new confusion matrix was computed to assess classification performance, accompanied by a heatmap for visual analysis of predictive strengths and weaknesses across postseason stages.
+
+```{r, echo=FALSE}
+cm <- as.data.frame(conf$table)
+total_by_class <- cm %>% group_by(Reference) %>% summarise(total = sum(Freq))
+cm <- left_join(cm, total_by_class, by = "Reference")
+cm$RelFreq <- cm$Freq / cm$total
+
+postseason_levels <- c("Champions", "X2ND", "F4", "E8", "S16", "R32", "R64", "R68", "N/A")
+cm$Reference <- factor(cm$Reference, levels = postseason_levels)
+cm$Prediction <- factor(cm$Prediction, levels = postseason_levels)
+
+ggplot(cm, aes(Prediction, Reference, fill = RelFreq)) +
+  geom_tile() + geom_text(aes(label = Freq), color = "black") +
+  scale_fill_gradient(low = "white", high = "red") + 
+  theme_minimal()
+```
+
+**Results of Tuned Model**
+
+The tuned model improved to 91.75% accuracy with a Kappa statistic of 0.7556, indicating a strong level of agreement between predicted and actual postseason outcomes across all classes. This performance represents a noticeable enhancement over the baseline model, not only in overall accuracy but also in the model’s ability to correctly classify less frequent outcomes. Notable improvements were observed in rare classes such as F4, E8, and R68, where the model previously struggled to make correct predictions. For example, the F4 class, which had a sensitivity of 0% in the baseline model, increased to over 16% in the tuned version, reflecting the model's improved ability to detect deep tournament runs.
+
+In addition, middle-stage tournament outcomes such as R32 and R64 experienced gains in both sensitivity (true positive rate) and positive predictive value (precision), meaning the model was better at both identifying these outcomes and correctly labeling teams that were predicted to fall into these categories. This improvement suggests that hyperparameter tuning enhanced the model’s discrimination power across a broader range of tournament results, rather than simply reinforcing majority class predictions. It also reflects better balance in the classifier's treatment of underrepresented classes, helping mitigate the impact of class imbalance—an issue that often limits the performance of classification models in sports datasets. Overall, the tuning process led to a model that not only improved in accuracy but also became more nuanced and equitable in its classification decisions across all postseason stages.
+
+## Tuned Model with Selected Variables
+
+**Approach**
+
+To reduce complexity, this model was trained using only the variables with an absolute correlation ≥ 0.3 to postnum: **WAB**, **W**, **BARTHAG**, **ADJOE**, **G**, **EFG_O**, **X2P_O**, **X2P_D**, **EFG_D**, and **ADJDE**.
+
+This allowed us to assess whether fewer but highly correlated features could maintain or improve accuracy.
+
+```{r, echo=FALSE}
+cor_formula <- as.formula(paste("POSTSEASON ~", paste(cor_related_vars, collapse = "+")))
+control <- trainControl(method = "cv", number = 5, classProbs = TRUE, summaryFunction = multiClassSummary)
+rf_tuned_cor <- train(
+  cor_formula, data = train, method = "rf",
+  metric = "Accuracy", trControl = control, ntree = 500)
+
+plot(rf_tuned_cor)
+pred <- predict(rf_tuned_cor, newdata = test)
+conf <- confusionMatrix(pred, test$POSTSEASON)
+print(conf)
+
+cm <- as.data.frame(conf$table)
+total_by_class <- cm %>% group_by(Reference) %>% summarise(total = sum(Freq))
+cm <- left_join(cm, total_by_class, by = "Reference")
+cm$RelFreq <- cm$Freq / cm$total
+
+cm$Reference <- factor(cm$Reference, levels = postseason_levels)
+cm$Prediction <- factor(cm$Prediction, levels = postseason_levels)
+
+ggplot(cm, aes(Prediction, Reference, fill = RelFreq)) +
+  geom_tile() + geom_text(aes(label = Freq), color = "black") +
+  scale_fill_gradient(low = "white", high = "red") + 
+  theme_minimal()
+```
+
+**Results of Model using Correlated Vars**
+
+This simplified model achieved 84.91% accuracy and a Kappa of 0.4942—a noticeable decline from previous models. While grouping was visually coherent, the model performed poorly on specific classes, especially rare ones like Champions and R68. These results suggest that although the correlated variables were informative, the excluded features captured important interactions and nuances not reflected in correlation alone.
+
+## Tuned Model with Team and Conf Variables
+
+```{r, include=FALSE}
+data <- data_orig %>% 
+  filter(G >= 20) %>% 
+  rename_with(make.names) %>% 
+  mutate(
+    POSTSEASON = factor(POSTSEASON),
+    SEED = factor(SEED)
+  ) %>%
+  mutate(
+    CONF = factor(CONF)
+  )
+# 1. Create lookup table
+teams <- unique(data$TEAM)
+team_lookup <- data.frame(
+  TEAM = teams,
+  team_id = seq_along(teams)
+)
+# 2. Merge lookup back into main dataframe
+df_encoded <- merge(data, team_lookup, by = "TEAM", sort = FALSE)
+# 3. (Optional) Drop original team column if not needed
+data <- subset(df_encoded, select = -TEAM)
+
+train <- data %>% filter(!(YEAR %in% test_years))
+test  <- data %>% filter(YEAR %in% test_years)
+levels(train$POSTSEASON) <- make.names(levels(train$POSTSEASON))
+levels(test$POSTSEASON)  <- make.names(levels(test$POSTSEASON))
+```
+
+To account for institutional success and historical trends, the final model included encoded TEAM IDs and the categorical CONF variable. This allowed the model to detect school-specific tendencies, which may help capture intangible factors such as coaching consistency, program prestige, or tournament experience.
+
+```{r, echo=FALSE}
+control <- trainControl(
+  method = "repeatedcv", number = 5, repeats = 3, classProbs = TRUE, summaryFunction = multiClassSummary)
+rf_tuned <- train(
+  POSTSEASON ~ ., data = train, method = "rf",
+  metric = "Accuracy", trControl = control, ntree = 200)
+
+# Plot tuned model performance
+plot(rf_tuned)
+pred <- predict(rf_tuned, newdata = test)
+conf <- confusionMatrix(pred, test$POSTSEASON)
+print(conf)
+
+# Confusion matrix heatmap (relative scale)
+cm <- as.data.frame(conf$table)
+total_by_class <- cm %>% group_by(Reference) %>% summarise(total = sum(Freq))
+cm <- left_join(cm, total_by_class, by = "Reference")
+cm$RelFreq <- cm$Freq / cm$total
+
+# Set the desired order for postseason stages
+postseason_levels <- c("Champions", "X2ND", "F4", "E8", "S16", "R32", "R64", "R68", "N/A")
+cm$Reference <- factor(cm$Reference, levels = postseason_levels)
+cm$Prediction <- factor(cm$Prediction, levels = postseason_levels)
+
+# Plot with ordered axes
+ggplot(cm, aes(Prediction, Reference, fill = RelFreq)) +
+  geom_tile() + geom_text(aes(label = Freq), color = "black") +
+  scale_fill_gradient(low = "white", high = "red") + 
+  theme_minimal()
+```
+
+**Results**
+
+This model achieved 90.99% accuracy and a Kappa of 0.7331, slightly lower than the fully tuned model using all features, but higher than the reduced model. Notably, this approach yielded better predictions for deeper rounds like Elite 8, Final Four, and Champions. The addition of TEAM and CONF variables to the model appears to have captured some measure of program prestige or consistency, which positively impacted model sensitivity in late-stage predictions.
+
+## Conclusion
+
+This project explored the predictive capabilities of Random Forest models in forecasting NCAA basketball postseason outcomes based on regular-season statistics. Multiple model variants were constructed and evaluated:
+
+-   The baseline model performed strongly on majority classes but lacked sensitivity for rarer outcomes.
+-   The tuned Random Forest significantly improved overall class sensitivity, especially in mid- and late-stage postseason outcomes, with the highest accuracy and Kappa values.
+-   The correlated-only model, despite its simplicity, underperformed — demonstrating that some useful features may not be highly correlated individually but contribute meaningfully in interaction with others.
+-   Including TEAM and CONF variables improved predictions for historically successful teams and deeper tournament rounds, likely due to institutional patterns and recurring success factors.
+
+Key Insights:
+
+-   Top predictors included SEED, WAB, BARTHAG, W, ADJOE, and EFG_O.
+-   Class imbalance limited detection of low-frequency outcomes like F4 or 2nd, suggesting a need for advanced resampling techniques or alternative modeling strategies (e.g., boosting).
+-   Historical patterns embedded in team and conference features offer valuable signal and could be expanded further with coach, roster, or injury data.
+
+Future Directions
+
+-   Integrate player-level statistics and injury reports.
+-   Use XGBoost or LightGBM for potentially higher predictive power.
+-   Experiment with SMOTE or other techniques to address class imbalance.
+-   Include temporal dynamics, such as win streaks or momentum factors near season end.
+
+Ultimately, this study shows that data-driven models—when carefully trained and tuned—can achieve over 91% accuracy in forecasting NCAA postseason outcomes, offering meaningful support for analysts, fans, and bracketologists alike.

@@ -3,20 +3,32 @@ project:
   output-dir: docs
 
 website:
-  title: "Data Science Portfolio -- Cole Rauscher"
+  title: "Cole Rauscher"
   navbar:
-    left:
+    right:
+      - href: projects.qmd
+        text: Projects
       - href: index.qmd
-        text: Home
-      - about.qmd
+        text: About
+      - href: contactme.qmd
+        text: Contact
+  sidebar:
+    title: "Projects"
+    style: "docked"
+    background: light
+    contents:
+      - projects.qmd
+      - href: proj1.qmd
+        text: "March Madness"
 
 format:
   html:
     theme:
-      - cosmo
+      - journal
       - brand
     css: styles.css
-    toc: true
+    toc: TRUE
+    sidebar: TRUE
 
 
 

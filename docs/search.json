@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Rauscher-Cole.github.io",
+    "title": "About Me",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "This is a Quarto website. THis is where I’ll introduce myself\n\nSome things I like to do\nEducation\nExperience\n\nPulse? Lux? Sketchy? Slate? Vapor"
   },
   {
     "objectID": "about.html",
@@ -12,5 +12,150 @@
     "title": "About",
     "section": "",
     "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "projects.html",
+    "href": "projects.html",
+    "title": "Data Science Projects",
+    "section": "",
+    "text": "This is where I will showcase my projects that I have done\n\nMarch Madness Predictions with Random Forest\nclimate change visualizations\ncustom xgboost implementation\nSpatiotemporal crime analysis in Buffalo",
+    "crumbs": [
+      "Projects",
+      "Data Science Projects"
+    ]
+  },
+  {
+    "objectID": "projects.html#this-is-where-i-will-showcase-my-projects-that-i-have-done",
+    "href": "projects.html#this-is-where-i-will-showcase-my-projects-that-i-have-done",
+    "title": "Projects",
+    "section": "",
+    "text": "march madness prediction\nclimate change visualizations\ncustom xgboost implementation\nSpatiotemporal crime analysis in Buffalo"
+  },
+  {
+    "objectID": "contactme.html",
+    "href": "contactme.html",
+    "title": "contactme",
+    "section": "",
+    "text": "This is where I will include contact information like socials"
+  },
+  {
+    "objectID": "proj1.html",
+    "href": "proj1.html",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "",
+    "text": "College basketball is one of the most popular sports in the United States, with fan engagement peaking during the NCAA tournament—commonly known as March Madness. Each spring, millions of fans fill out brackets in an attempt to predict how the tournament will unfold, often competing in pools with friends or online contests. Despite widespread enthusiasm, accurately forecasting postseason outcomes is notoriously difficult due to the unpredictability of the sport and the frequency of upsets.\nIn this project, we analyze regular-season statistics from NCAA Division I men’s basketball teams and develop predictive models to estimate postseason performance. Using data from multiple seasons, we train Random Forest classification models to predict how far a team will advance in the tournament. The data is split such that seven seasons are used for training, while three randomly selected seasons are held out for testing. In addition to building a baseline model, we explore hyperparameter tuning and dimensionality reduction by selecting only the most correlated features. Model accuracy is evaluated using confusion matrices, feature importance plots, and class-wise performance metrics.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#introduction",
+    "href": "proj1.html#introduction",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "",
+    "text": "College basketball is one of the most popular sports in the United States, with fan engagement peaking during the NCAA tournament—commonly known as March Madness. Each spring, millions of fans fill out brackets in an attempt to predict how the tournament will unfold, often competing in pools with friends or online contests. Despite widespread enthusiasm, accurately forecasting postseason outcomes is notoriously difficult due to the unpredictability of the sport and the frequency of upsets.\nIn this project, we analyze regular-season statistics from NCAA Division I men’s basketball teams and develop predictive models to estimate postseason performance. Using data from multiple seasons, we train Random Forest classification models to predict how far a team will advance in the tournament. The data is split such that seven seasons are used for training, while three randomly selected seasons are held out for testing. In addition to building a baseline model, we explore hyperparameter tuning and dimensionality reduction by selecting only the most correlated features. Model accuracy is evaluated using confusion matrices, feature importance plots, and class-wise performance metrics.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#background",
+    "href": "proj1.html#background",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "Background",
+    "text": "Background\nThe dataset used in this project originates from Kaggle and includes comprehensive statistical records of NCAA Division I men’s basketball teams spanning the 2013–2023 seasons. This dataset is well-suited for predictive modeling, as nearly all variables are already numerical, minimizing the need for extensive preprocessing. The only non-numeric features—conference and team name—are excluded from modeling due to their limited predictive relevance. However, the dataset does have notable limitations. It does not account for individual player statistics or injury reports, which can significantly impact a team’s postseason performance. Additionally, the model overlooks game location, an important factor given the substantial influence of home-court advantage in high-stakes matchups.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#data-cleaning-preparation",
+    "href": "proj1.html#data-cleaning-preparation",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "Data Cleaning & Preparation",
+    "text": "Data Cleaning & Preparation\nInitial Import and Selection\nThe dataset (cbb.csv) was imported using the read_csv() function from the readr package. To streamline the data, the first two columns—likely containing identifiers such as indices or team names—were removed, as they were not essential for modeling. The data import was piped directly into a preprocessing pipeline using %&gt;% from the tidyverse suite, facilitating a clean and efficient workflow.\nHandling Missing Values\nMissing values in the POSTSEASON and SEED columns were addressed by replacing all NA entries with “N/A”. This approach assumes that missing values in these fields correspond to teams that either did not qualify for the NCAA tournament or were not assigned a seed, and thus should not be treated as truly missing.\nFiltering for Sufficient Data\nTo ensure the reliability of the modeling process, the dataset was filtered to include only teams that played at least 20 games. This threshold was set to exclude teams with insufficient data for meaningful analysis. Column names were standardized using the make.names() function to ensure compatibility with modeling functions in R.\nFormatting Factor Variables\nBoth the POSTSEASON and SEED columns were converted to factor variables. This step ensures proper categorical handling during model training and avoids misinterpretation of these fields as continuous data. In later models, a numerical dummy of TEAM, and factor variable of CONF, were created to maximize model accuracy and fit.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#exploratory-data-analysis-eda",
+    "href": "proj1.html#exploratory-data-analysis-eda",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "Exploratory Data Analysis (EDA)",
+    "text": "Exploratory Data Analysis (EDA)\nGame Distribution and Normality Checks\nThe variable G (games played) was visualized using a histogram and boxplot to understand its distribution and identify any outliers. A broader analysis was performed using ggplot2, where histograms were created for all numeric variables and displayed using facet_wrap(), revealing patterns of skewness and distribution shapes across different features.\nSome mild outliers in G were detected but are to be expected given the variance in team schedules. Most variables showed approximately normal distributions, with the exception of BARTHAG and YEAR, with BARTHAG showing a broad distribution while YEAR is discrete.\nQ-Q Plots for Normality\nTo assess the normality of key performance metrics, a Q-Q plot was generated for G (games played). Both plots showed noticeable deviations from the diagonal line, particularly in the tails — an expected characteristic of sports performance data, which often exhibits non-normality due to competitive disparities.\nCorrelation Analysis\nA correlation matrix was computed for all numeric features using cor(), and visualized via GGally::ggcorr(). This matrix helped to identify strong linear relationships among variables, guiding later stages of feature selection.\nMapping POSTSEASON to a Numeric Scale\nTo facilitate quantitative analysis, POSTSEASON categories were mapped to a custom numeric scale ranging from “N/A” = 0 to “Champions” = 8. This transformation allowed for correlation analysis between postseason success and other numeric features to gather an idea of which variables will prove important in model training.\nVariable Correlations\nCorrelations were calculated between each numeric feature and the numeric postseason variable (postnum). Features with an absolute correlation greater than or equal 0.3 were selected for potential use in model refinement, narrowing down the most influential predictors.\nCorrelations between each numeric feature and the numeric postnum variable were calculated. Features with absolute correlation values above 0.3 were flagged as potentially important.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCorrelations with POSTSEASON (descending):\n\n\n       WAB          W    BARTHAG      ADJOE          G      EFG_O      X2P_O \n 0.6521000  0.6118469  0.5759129  0.5735100  0.4309168  0.3526545  0.3246501 \n     X2P_D      EFG_D      ADJDE \n-0.3515438 -0.3900154 -0.5137491",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#model-training-baseline-random-forest",
+    "href": "proj1.html#model-training-baseline-random-forest",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "Model Training: Baseline Random Forest",
+    "text": "Model Training: Baseline Random Forest\nTrain/Test Split by Year\nTo mimic real-world forecasting, three seasons were randomly selected as the test set (e.g., 2014, 2016, 2019). The model was trained on the remaining seven years to ensure it was evaluated on previously unseen data, avoiding leakage.\nFactor Level Adjustment\nPrior to model training, the levels of the POSTSEASON factor variable were standardized using make.names() to ensure compatibility with modeling functions, applied separately to both the training and test sets.\n\n\n[1] 2014 2016 2019\n\n\nModel Construction\nA baseline Random Forest classifier was built using the randomForest() function with 500 trees. Feature importance tracking was enabled (importance = TRUE) to later assess variable contributions.\nEvaluation\nThe model’s internal performance was evaluated using the Out-Of-Bag (OOB) error plot. Predictions were made on the test set, and performance was assessed using a confusion matrix from the caret package.\n\n\n\n\n\n\n\n\n\nConfusion Matrix and Statistics\n\n           Reference\nPrediction  X2ND Champions  E8  F4 N.A R32 R64 R68 S16\n  X2ND         0         1   0   0   0   0   0   0   0\n  Champions    1         0   0   2   0   0   0   0   0\n  E8           1         1   0   0   0   0   0   0   2\n  F4           0         1   0   0   0   0   0   0   0\n  N.A          0         0   0   1 850   0   0   0   0\n  R32          0         0   2   0   0  16  16   1  12\n  R64          0         0   1   0   0  31  77   9   5\n  R68          0         0   0   0   0   0   2   2   0\n  S16          1         0   9   3   0   1   1   0   5\n\nOverall Statistics\n                                          \n               Accuracy : 0.9013          \n                 95% CI : (0.8817, 0.9187)\n    No Information Rate : 0.8065          \n    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       \n                                          \n                  Kappa : 0.7061          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: X2ND Class: Champions Class: E8 Class: F4\nSensitivity            0.0000000         0.000000  0.000000 0.0000000\nSpecificity            0.9990485         0.997146  0.996161 0.9990458\nPos Pred Value         0.0000000         0.000000  0.000000 0.0000000\nNeg Pred Value         0.9971510         0.997146  0.988571 0.9943020\nPrevalence             0.0028463         0.002846  0.011385 0.0056926\nDetection Rate         0.0000000         0.000000  0.000000 0.0000000\nDetection Prevalence   0.0009488         0.002846  0.003795 0.0009488\nBalanced Accuracy      0.4995243         0.498573  0.498081 0.4995229\n                     Class: N.A Class: R32 Class: R64 Class: R68 Class: S16\nSensitivity              1.0000    0.33333    0.80208   0.166667   0.208333\nSpecificity              0.9951    0.96918    0.95198   0.998081   0.985437\nPos Pred Value           0.9988    0.34043    0.62602   0.500000   0.250000\nNeg Pred Value           1.0000    0.96822    0.97959   0.990476   0.981625\nPrevalence               0.8065    0.04554    0.09108   0.011385   0.022770\nDetection Rate           0.8065    0.01518    0.07306   0.001898   0.004744\nDetection Prevalence     0.8074    0.04459    0.11670   0.003795   0.018975\nBalanced Accuracy        0.9975    0.65126    0.87703   0.582374   0.596885\n\n\nVisualization\nA heatmap of the confusion matrix was created, normalized by class frequency to enhance interpretability. Feature importance was visualized using varImpPlot() to highlight the most influential predictors in determining postseason advancement.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nResults of Initial Model\nThe baseline model achieved 90.13% accuracy, significantly outperforming the No Information Rate (80.65%), with a Kappa score of 0.7061. It correctly identified all N/A outcomes (non-qualifiers), but sensitivity for rare classes like F4 and Champions was 0%. Middle-tier performances (R64, R32) were captured moderately well.\nA comparison between the variables selected through correlation analysis and those identified as most important by the Random Forest model reveals a strong alignment. Seven of the top eight features highlighted in the varImpPlot()—including WAB, W, BARTHAG, ADJOE, G, EFG_O, and X2P_O—also appeared among the variables with an absolute correlation of 0.3 or greater with the POSTSEASON outcome. This overlap validates the effectiveness of correlation-based filtering for initial feature selection and underscores the predictive strength of these metrics, which largely relate to a team’s overall efficiency and win record.\nOne notable exception is the SEED variable, which was not included in the correlation analysis due to its categorical nature but was identified as the single most important feature by the Random Forest model. This is intuitive, as tournament seed reflects both a team’s regular-season performance and the selection committee’s evaluation—both of which are highly predictive of postseason success.\nOn the other hand, several defensive metrics such as ADJDE, EFG_D, and X2P_D exhibited moderate negative correlations with POSTSEASON, yet did not rank highly in model-based importance. This suggests that while these variables have some linear relationship with postseason advancement, the Random Forest model did not find them as useful in split-based decision-making. It also highlights a potential modeling insight: offensive metrics may carry greater predictive weight than defensive ones in this dataset, at least within the framework of a Random Forest.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#tuned-random-forest",
+    "href": "proj1.html#tuned-random-forest",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "Tuned Random Forest",
+    "text": "Tuned Random Forest\nCross-Validation Setup\nA repeated cross-validation scheme was configured using trainControl() with class probability support and a multi-class summary function to optimize evaluation across multiple target categories.\nModel Training\nA new Random Forest model was trained using caret::train() with all available features and 200 trees. The training aimed to optimize overall accuracy, guided by cross-validation results.\n\n\nWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,\n: There were missing values in resampled performance measures.\n\n\n\n\n\n\n\n\n\nConfusion Matrix and Statistics\n\n           Reference\nPrediction  X2ND Champions  E8  F4 N.A R32 R64 R68 S16\n  X2ND         0         0   0   0   0   0   0   0   0\n  Champions    1         1   0   2   0   0   0   0   0\n  E8           1         1   5   1   0   0   0   0   2\n  F4           1         1   0   1   0   0   0   0   0\n  N.A          0         0   0   0 850   0   0   0   0\n  R32          0         0   3   0   0  25  19   1  11\n  R64          0         0   0   0   0  22  72   3   5\n  R68          0         0   0   0   0   1   4   7   0\n  S16          0         0   4   2   0   0   1   1   6\n\nOverall Statistics\n                                          \n               Accuracy : 0.9175          \n                 95% CI : (0.8992, 0.9334)\n    No Information Rate : 0.8065          \n    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       \n                                          \n                  Kappa : 0.7556          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: X2ND Class: Champions Class: E8 Class: F4\nSensitivity             0.000000        0.3333333  0.416667 0.1666667\nSpecificity             1.000000        0.9971456  0.995202 0.9980916\nPos Pred Value               NaN        0.2500000  0.500000 0.3333333\nNeg Pred Value          0.997154        0.9980952  0.993295 0.9952426\nPrevalence              0.002846        0.0028463  0.011385 0.0056926\nDetection Rate          0.000000        0.0009488  0.004744 0.0009488\nDetection Prevalence    0.000000        0.0037951  0.009488 0.0028463\nBalanced Accuracy       0.500000        0.6652395  0.705934 0.5823791\n                     Class: N.A Class: R32 Class: R64 Class: R68 Class: S16\nSensitivity              1.0000    0.52083    0.75000   0.583333   0.250000\nSpecificity              1.0000    0.96620    0.96868   0.995202   0.992233\nPos Pred Value           1.0000    0.42373    0.70588   0.583333   0.428571\nNeg Pred Value           1.0000    0.97688    0.97479   0.995202   0.982692\nPrevalence               0.8065    0.04554    0.09108   0.011385   0.022770\nDetection Rate           0.8065    0.02372    0.06831   0.006641   0.005693\nDetection Prevalence     0.8065    0.05598    0.09677   0.011385   0.013283\nBalanced Accuracy        1.0000    0.74352    0.85934   0.789267   0.621117\n\n\nEvaluation on Test Set\nThe tuned model was evaluated on the held-out test set. A new confusion matrix was computed to assess classification performance, accompanied by a heatmap for visual analysis of predictive strengths and weaknesses across postseason stages.\n\n\n\n\n\n\n\n\n\nResults of Tuned Model\nThe tuned model improved to 91.75% accuracy with a Kappa statistic of 0.7556, indicating a strong level of agreement between predicted and actual postseason outcomes across all classes. This performance represents a noticeable enhancement over the baseline model, not only in overall accuracy but also in the model’s ability to correctly classify less frequent outcomes. Notable improvements were observed in rare classes such as F4, E8, and R68, where the model previously struggled to make correct predictions. For example, the F4 class, which had a sensitivity of 0% in the baseline model, increased to over 16% in the tuned version, reflecting the model’s improved ability to detect deep tournament runs.\nIn addition, middle-stage tournament outcomes such as R32 and R64 experienced gains in both sensitivity (true positive rate) and positive predictive value (precision), meaning the model was better at both identifying these outcomes and correctly labeling teams that were predicted to fall into these categories. This improvement suggests that hyperparameter tuning enhanced the model’s discrimination power across a broader range of tournament results, rather than simply reinforcing majority class predictions. It also reflects better balance in the classifier’s treatment of underrepresented classes, helping mitigate the impact of class imbalance—an issue that often limits the performance of classification models in sports datasets. Overall, the tuning process led to a model that not only improved in accuracy but also became more nuanced and equitable in its classification decisions across all postseason stages.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#tuned-model-with-selected-variables",
+    "href": "proj1.html#tuned-model-with-selected-variables",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "Tuned Model with Selected Variables",
+    "text": "Tuned Model with Selected Variables\nApproach\nTo reduce complexity, this model was trained using only the variables with an absolute correlation ≥ 0.3 to postnum: WAB, W, BARTHAG, ADJOE, G, EFG_O, X2P_O, X2P_D, EFG_D, and ADJDE.\nThis allowed us to assess whether fewer but highly correlated features could maintain or improve accuracy.\n\n\nWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,\n: There were missing values in resampled performance measures.\n\n\n\n\n\n\n\n\n\nConfusion Matrix and Statistics\n\n           Reference\nPrediction  X2ND Champions  E8  F4 N.A R32 R64 R68 S16\n  X2ND         0         0   0   0   0   0   0   0   0\n  Champions    1         2   0   2   0   0   0   0   0\n  E8           1         0   4   0   1   0   0   0   4\n  F4           1         1   0   1   0   0   0   0   0\n  N.A          0         0   1   1 837   9  47   9   2\n  R32          0         0   1   0   1  16  18   1  10\n  R64          0         0   1   0  11  22  31   2   4\n  R68          0         0   0   0   0   0   0   0   0\n  S16          0         0   5   2   0   1   0   0   4\n\nOverall Statistics\n                                          \n               Accuracy : 0.8491          \n                 95% CI : (0.8261, 0.8702)\n    No Information Rate : 0.8065          \n    P-Value [Acc &gt; NIR] : 0.0001798       \n                                          \n                  Kappa : 0.4942          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: X2ND Class: Champions Class: E8 Class: F4\nSensitivity             0.000000         0.666667  0.333333 0.1666667\nSpecificity             1.000000         0.997146  0.994242 0.9980916\nPos Pred Value               NaN         0.400000  0.400000 0.3333333\nNeg Pred Value          0.997154         0.999047  0.992337 0.9952426\nPrevalence              0.002846         0.002846  0.011385 0.0056926\nDetection Rate          0.000000         0.001898  0.003795 0.0009488\nDetection Prevalence    0.000000         0.004744  0.009488 0.0028463\nBalanced Accuracy       0.500000         0.831906  0.663788 0.5823791\n                     Class: N.A Class: R32 Class: R64 Class: R68 Class: S16\nSensitivity              0.9847    0.33333    0.32292    0.00000   0.166667\nSpecificity              0.6618    0.96918    0.95825    1.00000   0.992233\nPos Pred Value           0.9238    0.34043    0.43662        NaN   0.333333\nNeg Pred Value           0.9122    0.96822    0.93388    0.98861   0.980806\nPrevalence               0.8065    0.04554    0.09108    0.01139   0.022770\nDetection Rate           0.7941    0.01518    0.02941    0.00000   0.003795\nDetection Prevalence     0.8596    0.04459    0.06736    0.00000   0.011385\nBalanced Accuracy        0.8232    0.65126    0.64058    0.50000   0.579450\n\n\n\n\n\n\n\n\n\nResults of Model using Correlated Vars\nThis simplified model achieved 84.91% accuracy and a Kappa of 0.4942—a noticeable decline from previous models. While grouping was visually coherent, the model performed poorly on specific classes, especially rare ones like Champions and R68. These results suggest that although the correlated variables were informative, the excluded features captured important interactions and nuances not reflected in correlation alone.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#tuned-model-with-team-and-conf-variables",
+    "href": "proj1.html#tuned-model-with-team-and-conf-variables",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "Tuned Model with Team and Conf Variables",
+    "text": "Tuned Model with Team and Conf Variables\nTo account for institutional success and historical trends, the final model included encoded TEAM IDs and the categorical CONF variable. This allowed the model to detect school-specific tendencies, which may help capture intangible factors such as coaching consistency, program prestige, or tournament experience.\n\n\nWarning in nominalTrainWorkflow(x = x, y = y, wts = weights, info = trainInfo,\n: There were missing values in resampled performance measures.\n\n\n\n\n\n\n\n\n\nConfusion Matrix and Statistics\n\n           Reference\nPrediction  X2ND Champions  E8  F4 N.A R32 R64 R68 S16\n  X2ND         0         0   0   0   0   0   0   0   0\n  Champions    1         1   0   1   0   0   0   0   0\n  E8           1         1   6   1   0   0   0   0   3\n  F4           1         1   0   2   0   0   0   0   0\n  N.A          0         0   0   0 850   0   0   0   0\n  R32          0         0   3   0   0  23  21   1  14\n  R64          0         0   0   0   0  24  68   7   2\n  R68          0         0   0   0   0   0   6   4   0\n  S16          0         0   3   2   0   1   1   0   5\n\nOverall Statistics\n                                          \n               Accuracy : 0.9099          \n                 95% CI : (0.8909, 0.9265)\n    No Information Rate : 0.8065          \n    P-Value [Acc &gt; NIR] : &lt; 2.2e-16       \n                                          \n                  Kappa : 0.7331          \n                                          \n Mcnemar's Test P-Value : NA              \n\nStatistics by Class:\n\n                     Class: X2ND Class: Champions Class: E8 Class: F4\nSensitivity             0.000000        0.3333333  0.500000  0.333333\nSpecificity             1.000000        0.9980971  0.994242  0.998092\nPos Pred Value               NaN        0.3333333  0.500000  0.500000\nNeg Pred Value          0.997154        0.9980971  0.994242  0.996190\nPrevalence              0.002846        0.0028463  0.011385  0.005693\nDetection Rate          0.000000        0.0009488  0.005693  0.001898\nDetection Prevalence    0.000000        0.0028463  0.011385  0.003795\nBalanced Accuracy       0.500000        0.6657152  0.747121  0.665712\n                     Class: N.A Class: R32 Class: R64 Class: R68 Class: S16\nSensitivity              1.0000    0.47917    0.70833   0.333333   0.208333\nSpecificity              1.0000    0.96123    0.96555   0.994242   0.993204\nPos Pred Value           1.0000    0.37097    0.67327   0.400000   0.416667\nNeg Pred Value           1.0000    0.97480    0.97062   0.992337   0.981766\nPrevalence               0.8065    0.04554    0.09108   0.011385   0.022770\nDetection Rate           0.8065    0.02182    0.06452   0.003795   0.004744\nDetection Prevalence     0.8065    0.05882    0.09583   0.009488   0.011385\nBalanced Accuracy        1.0000    0.72020    0.83694   0.663788   0.600769\n\n\n\n\n\n\n\n\n\nResults\nThis model achieved 90.99% accuracy and a Kappa of 0.7331, slightly lower than the fully tuned model using all features, but higher than the reduced model. Notably, this approach yielded better predictions for deeper rounds like Elite 8, Final Four, and Champions. The addition of TEAM and CONF variables to the model appears to have captured some measure of program prestige or consistency, which positively impacted model sensitivity in late-stage predictions.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "proj1.html#conclusion",
+    "href": "proj1.html#conclusion",
+    "title": "Predicting NCAA Basketball Post-Season Results using RandomForest",
+    "section": "Conclusion",
+    "text": "Conclusion\nThis project explored the predictive capabilities of Random Forest models in forecasting NCAA basketball postseason outcomes based on regular-season statistics. Multiple model variants were constructed and evaluated:\n\nThe baseline model performed strongly on majority classes but lacked sensitivity for rarer outcomes.\nThe tuned Random Forest significantly improved overall class sensitivity, especially in mid- and late-stage postseason outcomes, with the highest accuracy and Kappa values.\nThe correlated-only model, despite its simplicity, underperformed — demonstrating that some useful features may not be highly correlated individually but contribute meaningfully in interaction with others.\nIncluding TEAM and CONF variables improved predictions for historically successful teams and deeper tournament rounds, likely due to institutional patterns and recurring success factors.\n\nKey Insights:\n\nTop predictors included SEED, WAB, BARTHAG, W, ADJOE, and EFG_O.\nClass imbalance limited detection of low-frequency outcomes like F4 or 2nd, suggesting a need for advanced resampling techniques or alternative modeling strategies (e.g., boosting).\nHistorical patterns embedded in team and conference features offer valuable signal and could be expanded further with coach, roster, or injury data.\n\nFuture Directions\n\nIntegrate player-level statistics and injury reports.\nUse XGBoost or LightGBM for potentially higher predictive power.\nExperiment with SMOTE or other techniques to address class imbalance.\nInclude temporal dynamics, such as win streaks or momentum factors near season end.\n\nUltimately, this study shows that data-driven models—when carefully trained and tuned—can achieve over 91% accuracy in forecasting NCAA postseason outcomes, offering meaningful support for analysts, fans, and bracketologists alike.",
+    "crumbs": [
+      "Projects",
+      "March Madness"
+    ]
+  },
+  {
+    "objectID": "projects.html#project-1",
+    "href": "projects.html#project-1",
+    "title": "Projects",
+    "section": "Project 1",
+    "text": "Project 1\n{include: proj1.qmd}",
+    "crumbs": [
+      "Projects"
+    ]
   }
 ]

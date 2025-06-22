@@ -1,11 +1,11 @@
 ---
-title: "Rauscher-Cole.github.io"
+title: "About Me"
 ---
 
-This is a Quarto website.
+This is a Quarto website. THis is where I'll introduce myself
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+- Some things I like to do 
+- Education 
+- Experience
 
-```{r}
-1 + 1
-```
+Pulse? Lux? Sketchy? Slate? Vapor
