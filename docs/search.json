@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "About Me",
+    "title": "Cole Rauscher",
     "section": "",
-    "text": "This is a Quarto website. THis is where I’ll introduce myself\n\nSome things I like to do\nEducation\nExperience\n\nPulse? Lux? Sketchy? Slate? Vapor"
+    "text": "Education\nDaemen University | Amherst, NY | B.S in Data Science - Marketing | Sept 2021 - May 2025\n\nFounders Scholarship Recipient | Deans List | Major GPA: 3.7\nRelevent Coursework:\n\nLe Roy Junior-Senior High School | Le Roy, NY | Graduated May 2021 | GPA: 95.38, SAT: 1380 (Math: 720, Reading & Writing: 660)\n\nVarsity Football, Varsity Wrestling (2x Sectional Finalist), Varsity Track and Field (2x Team Sectional Champions)\nHonors: High Honor Roll, Mastery in Science, Advanced Regents Diploma\n\n\n\nExperience\nCollegiate Village, Buffalo, NY | Marketing Intern | January 2025 - May 2025\n\nCreated and distributed promotional content that increased leasing campaign engagement and renewals.\nProduced written, video, and image content for social and print media; supported marketing events and tours.\nCaptured multimedia content and maintained CRM accuracy while coordinating tours and responding to inquiries.\n\nGenesee Rugby Club | Co-Social Media Coordinator | December 2024 - Present\n\nHelp grow Instagram engagement by 30% through consistent, audience-targeted content\nUse Canva to create graphics and content, and insights & analytics to guide content strategy.\n\nPatriot Sealers, Rochester, NY | Crew Lead | May 2022 - Present\n\nLed a 3–4 person team completing up to 12 driveways/day, coordinating logistics and ensuring quality service.\nHandled daily payments, records, and on-site customer resolution with professionalism and high satisfaction.\n\n\n\n  \n  \n  \n    \n     LinkedIn\n  \n  \n    \n     Github\n  \n  \n    \n     Email\n  \n  \n    \n     Resume"
   },
   {
     "objectID": "about.html",
@@ -157,5 +157,12 @@
     "crumbs": [
       "Projects"
     ]
+  },
+  {
+    "objectID": "index.html#career-and-education",
+    "href": "index.html#career-and-education",
+    "title": "Cole Rauscher",
+    "section": "",
+    "text": "This is a Quarto website. THis is where I’ll introduce myself ## Hobbys and - Some things I like to do - Education - Experience\nPulse? Lux? Sketchy? Slate? Vapor"
   }
 ]

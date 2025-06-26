@@ -1,11 +1,57 @@
 ---
-title: "About Me"
+title: "Cole Rauscher"
+image: webimage.jpg
+about:
+  id: hero-heading
+  template: broadside
+  image: webimage.jpg
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/in/cole-rauscher
+    - icon: github
+      text: Github
+      href: https://github.com/Rauscher-cole
+    - icon: envelope
+      text: Email
+      href: mailto:cole.rauscher@daemen.edu
+    - icon: file-text
+      text: "Resume"
+      href: finalfinalresume.pdf
 ---
 
-This is a Quarto website. THis is where I'll introduce myself
+:::{#hero-heading}
 
-- Some things I like to do 
-- Education 
-- Experience
+### Education
 
-Pulse? Lux? Sketchy? Slate? Vapor
+**Daemen University** | **Amherst, NY** | *B.S* in Data Science - Marketing | Sept 2021 - May 2025
+
+- Founders Scholarship Recipient | Deans List | Major GPA: 3.7
+- Relevent Coursework:
+
+**Le Roy Junior-Senior High School** | **Le Roy, NY** | Graduated May 2021 | GPA: 95.38, SAT: 1380 (Math: 720, Reading & Writing: 660)
+
+- Varsity Football, Varsity Wrestling (2x Sectional Finalist), Varsity Track and Field (2x Team Sectional Champions)
+- Honors: High Honor Roll, Mastery in Science, Advanced Regents Diploma
+
+### Experience
+
+**Collegiate Village**, Buffalo, NY | *Marketing Intern* | January 2025 - May 2025
+
+- Created and distributed promotional content that increased leasing campaign engagement and renewals.
+- Produced written, video, and image content for social and print media; supported marketing events and tours.
+- Captured multimedia content and maintained CRM accuracy while coordinating tours and responding to inquiries.
+
+
+**Genesee Rugby Club** | *Co-Social Media Coordinator* | December 2024 - Present
+
+- Help grow Instagram engagement by 30% through consistent, audience-targeted content 
+- Use Canva to create graphics and content, and insights & analytics to guide content strategy.
+
+**Patriot Sealers**, Rochester, NY | *Crew Lead* | May 2022 - Present
+
+-	Led a 3–4 person team completing up to 12 driveways/day, coordinating logistics and ensuring quality service.
+-	Handled daily payments, records, and on-site customer resolution with professionalism and high satisfaction.
+
+:::
+

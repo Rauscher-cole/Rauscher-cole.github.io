@@ -4,3 +4,18 @@
   font-family: 'Georgia', serif;  /* or any other font */
   font-size: 1.25rem;  /* optional */
 }
+
+#hero-heading h3, #hero-heading h2 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Tighten up spacing between paragraphs */
+#hero-heading p {
+  margin: 0.25rem 0;
+}
+
+#hero-heading {
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
