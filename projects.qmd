@@ -2,8 +2,11 @@
 title: "Data Science Projects"
 ---
 
+Here you’ll find a curated collection of the projects I’ve worked on — from predictive modeling and marketing analytics to interactive dashboards and machine learning workflows. 
 
-**This is where I will showcase my projects that I have done**
+I’m passionate about using data to uncover patterns, drive smarter decisions, and tell compelling stories. Whether it’s building classification models for NCAA predictions, analyzing consumer behavior, or mapping crime trends, I enjoy blending technical skill with creative problem-solving. 
+
+These projects reflect not just what I’ve learned, but how I think — with curiosity, clarity, and a drive to build things that are both insightful and actionable.
 
 - [March Madness Predictions with Random Forest](proj1.qmd)
 - climate change visualizations

@@ -18,7 +18,7 @@
     "href": "projects.html",
     "title": "Data Science Projects",
     "section": "",
-    "text": "This is where I will showcase my projects that I have done\n\nMarch Madness Predictions with Random Forest\nclimate change visualizations\ncustom xgboost implementation\nSpatiotemporal crime analysis in Buffalo",
+    "text": "Here you’ll find a curated collection of the projects I’ve worked on — from predictive modeling and marketing analytics to interactive dashboards and machine learning workflows.\nI’m passionate about using data to uncover patterns, drive smarter decisions, and tell compelling stories. Whether it’s building classification models for NCAA predictions, analyzing consumer behavior, or mapping crime trends, I enjoy blending technical skill with creative problem-solving.\nThese projects reflect not just what I’ve learned, but how I think — with curiosity, clarity, and a drive to build things that are both insightful and actionable.\n\nMarch Madness Predictions with Random Forest\nclimate change visualizations\ncustom xgboost implementation\nSpatiotemporal crime analysis in Buffalo",
     "crumbs": [
       "Projects",
       "Data Science Projects"
@@ -34,9 +34,9 @@
   {
     "objectID": "contactme.html",
     "href": "contactme.html",
-    "title": "contactme",
+    "title": "Contact Me",
     "section": "",
-    "text": "This is where I will include contact information like socials lol"
+    "text": "Get in Touch\nThanks for visiting my site! If you’d like to connect, feel free to reach out regarding:\n\nData science and analytics projects\n\nCollaboration or consulting opportunities\n\nResume or portfolio inquiries\n\nMarketing, research, or visualization support\n\nFeedback or questions about my work\n\n\n\n\nContact Here\n\n cole.rauscher@daemen.edu\n linkedin.com/in/cole-rauscher\n instagram.com/colerauscher\n github.com/rauscher-cole\n\nFeedback can also be left on the GitHub Issues page."
   },
   {
     "objectID": "proj1.html",
@@ -164,5 +164,12 @@
     "title": "Cole Rauscher",
     "section": "",
     "text": "This is a Quarto website. THis is where I’ll introduce myself ## Hobbys and - Some things I like to do - Education - Experience\nPulse? Lux? Sketchy? Slate? Vapor"
+  },
+  {
+    "objectID": "contactme.html#get-in-touch",
+    "href": "contactme.html#get-in-touch",
+    "title": "contactme",
+    "section": "Get in Touch",
+    "text": "Get in Touch\nThanks for visiting my site! If you’d like to connect, feel free to reach out regarding:\n\nData science and analytics projects\n\nCollaboration or consulting opportunities\n\nResume or portfolio inquiries\n\nMarketing, research, or visualization support\n\nFeedback or questions about my work\n\n\n\nContact Options\n\n rauscher.cole@gmail.com\n\n linkedin.com/in/cole-rauscher\n\n github.com/rauscher-cole\n\nOr leave feedback on the GitHub Issues page."
   }
 ]
