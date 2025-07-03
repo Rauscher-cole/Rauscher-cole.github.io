@@ -20,6 +20,10 @@ website:
       - projects.qmd
       - href: proj1.qmd
         text: "March Madness"
+      - href: climateChangeVisualizations.qmd
+        text: "Climate Change Visualizations and Forecasting"
+      - href: CustomXgboostAlgo.qmd
+        text: "Predicting CTR with Custom Xgboost Algorithm"
 
 format:
   html:

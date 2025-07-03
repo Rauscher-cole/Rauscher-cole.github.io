@@ -18,7 +18,7 @@
     "href": "projects.html",
     "title": "Data Science Projects",
     "section": "",
-    "text": "Here you’ll find a curated collection of the projects I’ve worked on — from predictive modeling and marketing analytics to interactive dashboards and machine learning workflows.\nI’m passionate about using data to uncover patterns, drive smarter decisions, and tell compelling stories. Whether it’s building classification models for NCAA predictions, analyzing consumer behavior, or mapping crime trends, I enjoy blending technical skill with creative problem-solving.\nThese projects reflect not just what I’ve learned, but how I think — with curiosity, clarity, and a drive to build things that are both insightful and actionable.\n\nMarch Madness Predictions with Random Forest\nclimate change visualizations\ncustom xgboost implementation\nSpatiotemporal crime analysis in Buffalo",
+    "text": "Here you’ll find a curated collection of the projects I’ve worked on — from predictive modeling and marketing analytics to interactive dashboards and machine learning workflows.\nI’m passionate about using data to uncover patterns, drive smarter decisions, and tell compelling stories. Whether it’s building classification models for NCAA predictions, analyzing consumer behavior, or mapping crime trends, I enjoy blending technical skill with creative problem-solving.\nThese projects reflect not just what I’ve learned, but how I think — with curiosity, clarity, and a drive to build things that are both insightful and actionable.\n\nMarch Madness Predictions with Random Forest\nClimate Change Visualizations and Forecasting*\nPredicting CTR with Custom Xgboost Algorithm*\nSpatiotemporal Crime Analysis in Buffalo* (Capstone Project) | LaTeX Version here!\n\n(* - File Conversion/Revision in Progress)",
     "crumbs": [
       "Projects",
       "Data Science Projects"
@@ -171,5 +171,188 @@
     "title": "contactme",
     "section": "Get in Touch",
     "text": "Get in Touch\nThanks for visiting my site! If you’d like to connect, feel free to reach out regarding:\n\nData science and analytics projects\n\nCollaboration or consulting opportunities\n\nResume or portfolio inquiries\n\nMarketing, research, or visualization support\n\nFeedback or questions about my work\n\n\n\nContact Options\n\n rauscher.cole@gmail.com\n\n linkedin.com/in/cole-rauscher\n\n github.com/rauscher-cole\n\nOr leave feedback on the GitHub Issues page."
+  },
+  {
+    "objectID": "climateChangeVisualizations.html",
+    "href": "climateChangeVisualizations.html",
+    "title": "Climate Change Visualizations",
+    "section": "",
+    "text": "Climate change has become a clear issue in today’s world, with its significance rising more and more each day, and it’s effects becoming more and more clear. In this project, data of temperature changes in Countries, Continents, and the world as a whole were analyzed and explored to answer the following research questions, how have temperature change trends differed in different areas across the world, and are there significant differences in temperature changes across decades? In this study, I hope to visualize temperature changes across the areas clearly and inspect the different components involved, such as seasonality and the trend of the temperature change. Hopefully, in doing this I can help people to understand the significance of the issue and how bad it really is, if bad at all. This is important due to the rising evidence of the significance of the issue, with temperatures changing rapidly, and acting much differently than in the past, it is clear that something is going on but it’s very hard to understand why, or what it is doing. Visualizing the trends of temperature change, especially from the past, all the way back to the sixties will help people understand what the temperature is actually doing, and reshape the issue in their heads.",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "climateChangeVisualizations.html#introduction",
+    "href": "climateChangeVisualizations.html#introduction",
+    "title": "Climate Change Visualizations",
+    "section": "",
+    "text": "Climate change has become a clear issue in today’s world, with its significance rising more and more each day, and it’s effects becoming more and more clear. In this project, data of temperature changes in Countries, Continents, and the world as a whole were analyzed and explored to answer the following research questions, how have temperature change trends differed in different areas across the world, and are there significant differences in temperature changes across decades? In this study, I hope to visualize temperature changes across the areas clearly and inspect the different components involved, such as seasonality and the trend of the temperature change. Hopefully, in doing this I can help people to understand the significance of the issue and how bad it really is, if bad at all. This is important due to the rising evidence of the significance of the issue, with temperatures changing rapidly, and acting much differently than in the past, it is clear that something is going on but it’s very hard to understand why, or what it is doing. Visualizing the trends of temperature change, especially from the past, all the way back to the sixties will help people understand what the temperature is actually doing, and reshape the issue in their heads.",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "climateChangeVisualizations.html#background",
+    "href": "climateChangeVisualizations.html#background",
+    "title": "Climate Change Visualizations",
+    "section": "Background",
+    "text": "Background\nThe data used in this project comes from a Kaggle dataset containing temperature change data from all across the world, including data on the world, continents, and groups of countries between the years 1961-2020. The analysis used in the dataset includes time series analysis and simple data exploration exploring the values, and years, and finding any relationships or correlations within them. Considering the simplicity of the data, there isn’t much analysis to be done with it but rather a large depth of exploration that is possible. The analysis used in this project is mainly for exploration purposes, dissecting temperature change over time and visualizing the changes and differences that are present, as well as in different areas across the world over time, allowing us to see if there are any consistencies across locations. This research is guided by the principles of climate science and time series analysis. From a climate science perspective, the study is rooted in the understanding of anthropogenic influences on global temperature changes, as articulated in theories such as the greenhouse gas effect and the feedback mechanisms of climate systems. These theories suggest that human activities, particularly fossil fuel combustion and deforestation, contribute to increased concentrations of greenhouse gases, which in turn lead to global warming. Time series analysis provides the statistical tools necessary to examine patterns over time, identify trends, and decompose temperature changes into components such as seasonality, trends, and residuals. The application of these frameworks enables a structured approach to analyzing the data, ensuring that observed patterns are interpreted within the broader context of known climate dynamics and statistical rigor. Despite the extensive body of research on climate change, several gaps remain that this study aims to address:\n\nRegional Variability: While global temperature trends are well-documented, there is less emphasis on regional or continental differences in temperature change trends. This study provides a comparative analysis of temperature changes across different areas, highlighting spatial disparities.\nDecadal Comparisons: Few studies delve into the differences in temperature change patterns across decades. By examining these changes, this research seeks to identify whether certain periods experienced more rapid temperature shifts and what factors might have contributed.\nVisualization of Trends: Although raw data is often presented, there is a lack of accessible and clear visual representations of how temperature has evolved across different regions and timeframes. This project addresses this by emphasizing visualizations that are intuitive and informative.",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "climateChangeVisualizations.html#data-cleaning-preparation",
+    "href": "climateChangeVisualizations.html#data-cleaning-preparation",
+    "title": "Climate Change Visualizations",
+    "section": "Data Cleaning & Preparation",
+    "text": "Data Cleaning & Preparation\nThe dataset initially includes 66 columns, with the area and area code, month and month code, element of Standard Deviation or Temperature change, as well as unit column. The rest of the columns hold the data for a single year, from 1961-2019. I started with getting rid of the month and area code columns, as well as the unit and element code, as I will not be using these in the analysis. From here I filtered out the Temperature change data from the element category and then removed that column as it is no longer needed and they are all temperature change. From here, I noticed that there was instances in the Month column that were three months combined, for example “Dec Jan Feb”. These instances correlated to seasons in the specific year. Due to the way it was encoded, it was hard to figure out how to rename these instances, but eventually, it was decided to convert the month’s column from UTF-8 format into ASCII, substituting the Unknown symbol for nothing, leaving us with the example to know equal “DecJanFeb.” From here it was much easier to handle, so I then remapped the instances to their respective season allowing the dataset to appear a lot more clear. From here the data is a lot easier to work on, with a column for area, month, and then the years with the data. I then converted the data into a long format to make it more linear, and easier to plot and compare the different areas to each other. I combined the year columns into two columns, one for the year, and the second for the temperature change values, so now our dataset has the four variables that we need.\nImputation of NA values\nFrom here, the next issue to address was the missing values in the dataset. I kept the original in case I needed to check certain areas or years for NA values, and then imputed the missing values. The method of imputation was to group the data by area, and then by months (time period), and then used the mean of the grouped areas by month to fill in any NA values included. The data was then checked for any remaining NA values, where none were found. It was important to keep the NA data for later analysis, as it was found that certain areas lacked data before 1991 and all the values were imputed with mean, throwing off the analysis.\nSubset Creation\nOnce all the missing values were handled, I created subset datasets for the monthly, seasonal, and yearly data. This will allow me to analyze different aspects using the different data as needed. Due to the sheer size of the dataset, most plots and modeling had to be done on the seasonal data as opposed to the monthly data for clarity.",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "climateChangeVisualizations.html#exploratory-data-analysis-eda",
+    "href": "climateChangeVisualizations.html#exploratory-data-analysis-eda",
+    "title": "Climate Change Visualizations",
+    "section": "Exploratory Data Analysis (EDA)",
+    "text": "Exploratory Data Analysis (EDA)\nTo start the analysis and determine areas most and least volatile across the time period, average temperature change for each area was calculated and stored in a dataframe. To decrease the amount of noise and randomness in the averages, I used the yearly data for this tasks. The data was grouped by areas, calculating the average and max temperature change in the area across the years, this new data was then placed in a dataframe sorted by descending average. This gave me a table that shows the areas and the average temperature change through the years, allowing me to see which areas might be the best to analyze in terms of climate change severity. This was then repeated only using data from the latest 20 years to determine if there is any significant difference from the results obtained using all of the data.",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "climateChangeVisualizations.html#time-series-decomposition-selected-areas",
+    "href": "climateChangeVisualizations.html#time-series-decomposition-selected-areas",
+    "title": "Climate Change Visualizations",
+    "section": "Time Series Decomposition (Selected Areas)",
+    "text": "Time Series Decomposition (Selected Areas)",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "climateChangeVisualizations.html#comparative-visualizations",
+    "href": "climateChangeVisualizations.html#comparative-visualizations",
+    "title": "Climate Change Visualizations",
+    "section": "Comparative Visualizations",
+    "text": "Comparative Visualizations",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "climateChangeVisualizations.html#global-trend-and-forecasting",
+    "href": "climateChangeVisualizations.html#global-trend-and-forecasting",
+    "title": "Climate Change Visualizations",
+    "section": "Global Trend and Forecasting",
+    "text": "Global Trend and Forecasting",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "climateChangeVisualizations.html#decadal-comparison",
+    "href": "climateChangeVisualizations.html#decadal-comparison",
+    "title": "Climate Change Visualizations",
+    "section": "Decadal Comparison",
+    "text": "Decadal Comparison",
+    "crumbs": [
+      "Projects",
+      "Climate Change Visualizations and Forecasting"
+    ]
+  },
+  {
+    "objectID": "CustomXgboostAlgo.html#background",
+    "href": "CustomXgboostAlgo.html#background",
+    "title": "Custom XGBoost Implementation",
+    "section": "Background",
+    "text": "Background",
+    "crumbs": [
+      "Projects",
+      "Predicting CTR with Custom Xgboost Algorithm"
+    ]
+  },
+  {
+    "objectID": "CustomXgboostAlgo.html#data-cleaning-preparation",
+    "href": "CustomXgboostAlgo.html#data-cleaning-preparation",
+    "title": "Custom XGBoost Implementation",
+    "section": "Data Cleaning & Preparation",
+    "text": "Data Cleaning & Preparation\nload data, make factor",
+    "crumbs": [
+      "Projects",
+      "Predicting CTR with Custom Xgboost Algorithm"
+    ]
+  },
+  {
+    "objectID": "CustomXgboostAlgo.html#exploratory-data-analysis-eda",
+    "href": "CustomXgboostAlgo.html#exploratory-data-analysis-eda",
+    "title": "Custom XGBoost Implementation",
+    "section": "Exploratory Data Analysis (EDA)",
+    "text": "Exploratory Data Analysis (EDA)\nx",
+    "crumbs": [
+      "Projects",
+      "Predicting CTR with Custom Xgboost Algorithm"
+    ]
+  },
+  {
+    "objectID": "CustomXgboostAlgo.html#methodology",
+    "href": "CustomXgboostAlgo.html#methodology",
+    "title": "Custom XGBoost Implementation",
+    "section": "Methodology",
+    "text": "Methodology\nx",
+    "crumbs": [
+      "Projects",
+      "Predicting CTR with Custom Xgboost Algorithm"
+    ]
+  },
+  {
+    "objectID": "CustomXgboostAlgo.html#results",
+    "href": "CustomXgboostAlgo.html#results",
+    "title": "Custom XGBoost Implementation",
+    "section": "Results",
+    "text": "Results\nx\n\n\nRound 1: Focal Loss = 1.3648\nRound 2: Focal Loss = 0.2053\nRound 3: Focal Loss = 2.0073\nRound 4: Focal Loss = 1.3039\nRound 5: Focal Loss = 0.9250\nRound 6: Focal Loss = 0.3758\nRound 7: Focal Loss = 0.4977\nEarly stopping...\n\n\nConfusion Matrix and Statistics\n\n          Reference\nPrediction     0     1\n         0  5182   620\n         1 11286  2912\n                                          \n               Accuracy : 0.4047          \n                 95% CI : (0.3979, 0.4115)\n    No Information Rate : 0.8234          \n    P-Value [Acc &gt; NIR] : 1               \n                                          \n                  Kappa : 0.0636          \n                                          \n Mcnemar's Test P-Value : &lt;2e-16          \n                                          \n            Sensitivity : 0.3147          \n            Specificity : 0.8245          \n         Pos Pred Value : 0.8931          \n         Neg Pred Value : 0.2051          \n             Prevalence : 0.8234          \n         Detection Rate : 0.2591          \n   Detection Prevalence : 0.2901          \n      Balanced Accuracy : 0.5696          \n                                          \n       'Positive' Class : 0",
+    "crumbs": [
+      "Projects",
+      "Predicting CTR with Custom Xgboost Algorithm"
+    ]
+  },
+  {
+    "objectID": "CustomXgboostAlgo.html#discussion",
+    "href": "CustomXgboostAlgo.html#discussion",
+    "title": "Custom XGBoost Implementation",
+    "section": "Discussion",
+    "text": "Discussion\nx",
+    "crumbs": [
+      "Projects",
+      "Predicting CTR with Custom Xgboost Algorithm"
+    ]
+  },
+  {
+    "objectID": "CustomXgboostAlgo.html#conclusion",
+    "href": "CustomXgboostAlgo.html#conclusion",
+    "title": "Custom XGBoost Implementation",
+    "section": "Conclusion",
+    "text": "Conclusion\nx",
+    "crumbs": [
+      "Projects",
+      "Predicting CTR with Custom Xgboost Algorithm"
+    ]
+  },
+  {
+    "objectID": "CustomXgboostAlgo.html#x",
+    "href": "CustomXgboostAlgo.html#x",
+    "title": "Custom XGBoost Implementation",
+    "section": "x",
+    "text": "x"
   }
 ]

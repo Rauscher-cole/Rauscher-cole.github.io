@@ -9,7 +9,8 @@ I’m passionate about using data to uncover patterns, drive smarter decisions, 
 These projects reflect not just what I’ve learned, but how I think — with curiosity, clarity, and a drive to build things that are both insightful and actionable.
 
 - [March Madness Predictions with Random Forest](proj1.qmd)
-- climate change visualizations
-- custom xgboost implementation
-- Spatiotemporal crime analysis in Buffalo
+- [Climate Change Visualizations and Forecasting*](climateChangeVisualizations.qmd)
+- [Predicting CTR with Custom Xgboost Algorithm*](CustomXgboostAlgo.qmd)
+- Spatiotemporal Crime Analysis in Buffalo* (Capstone Project) | [LaTeX Version here!](researchproject.pdf)
 
+(* - File Conversion/Revision in Progress)

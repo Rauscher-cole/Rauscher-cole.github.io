@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Data Science Projects – Cole Rauscher - Data Science &amp; Marketing</title>
+<title>Climate Change Visualizations – Cole Rauscher - Data Science &amp; Marketing</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./projects.html">Data Science Projects</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./climateChangeVisualizations.html">Climate Change Visualizations and Forecasting</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -126,7 +126,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./projects.html" class="sidebar-item-text sidebar-link active">
+  <a href="./projects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Science Projects</span></a>
   </div>
 </li>
@@ -138,13 +138,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./climateChangeVisualizations.html" class="sidebar-item-text sidebar-link">
+  <a href="./climateChangeVisualizations.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Climate Change Visualizations and Forecasting</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./CustomXgboostAlgo.html" class="sidebar-item-text sidebar-link">
+  <a href="./customXgboostAlgo.qmd" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Predicting CTR with Custom Xgboost Algorithm</span></a>
   </div>
 </li>
@@ -153,15 +153,28 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#data-cleaning-preparation" id="toc-data-cleaning-preparation" class="nav-link" data-scroll-target="#data-cleaning-preparation">Data Cleaning &amp; Preparation</a></li>
+  <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</a></li>
+  <li><a href="#time-series-decomposition-selected-areas" id="toc-time-series-decomposition-selected-areas" class="nav-link" data-scroll-target="#time-series-decomposition-selected-areas">Time Series Decomposition (Selected Areas)</a></li>
+  <li><a href="#comparative-visualizations" id="toc-comparative-visualizations" class="nav-link" data-scroll-target="#comparative-visualizations">Comparative Visualizations</a></li>
+  <li><a href="#global-trend-and-forecasting" id="toc-global-trend-and-forecasting" class="nav-link" data-scroll-target="#global-trend-and-forecasting">Global Trend and Forecasting</a></li>
+  <li><a href="#decadal-comparison" id="toc-decadal-comparison" class="nav-link" data-scroll-target="#decadal-comparison">Decadal Comparison</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Data Science Projects</h1>
+<h1 class="title">Climate Change Visualizations</h1>
 </div>
 
 
@@ -178,18 +191,182 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Here you’ll find a curated collection of the projects I’ve worked on — from predictive modeling and marketing analytics to interactive dashboards and machine learning workflows.</p>
-<p>I’m passionate about using data to uncover patterns, drive smarter decisions, and tell compelling stories. Whether it’s building classification models for NCAA predictions, analyzing consumer behavior, or mapping crime trends, I enjoy blending technical skill with creative problem-solving.</p>
-<p>These projects reflect not just what I’ve learned, but how I think — with curiosity, clarity, and a drive to build things that are both insightful and actionable.</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Climate change has become a clear issue in today’s world, with its significance rising more and more each day, and it’s effects becoming more and more clear. In this project, data of temperature changes in Countries, Continents, and the world as a whole were analyzed and explored to answer the following research questions, how have temperature change trends differed in different areas across the world, and are there significant differences in temperature changes across decades? In this study, I hope to visualize temperature changes across the areas clearly and inspect the different components involved, such as seasonality and the trend of the temperature change. Hopefully, in doing this I can help people to understand the significance of the issue and how bad it really is, if bad at all. This is important due to the rising evidence of the significance of the issue, with temperatures changing rapidly, and acting much differently than in the past, it is clear that something is going on but it’s very hard to understand why, or what it is doing. Visualizing the trends of temperature change, especially from the past, all the way back to the sixties will help people understand what the temperature is actually doing, and reshape the issue in their heads.</p>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>The data used in this project comes from a Kaggle dataset containing temperature change data from all across the world, including data on the world, continents, and groups of countries between the years 1961-2020. The analysis used in the dataset includes time series analysis and simple data exploration exploring the values, and years, and finding any relationships or correlations within them. Considering the simplicity of the data, there isn’t much analysis to be done with it but rather a large depth of exploration that is possible. The analysis used in this project is mainly for exploration purposes, dissecting temperature change over time and visualizing the changes and differences that are present, as well as in different areas across the world over time, allowing us to see if there are any consistencies across locations. This research is guided by the principles of climate science and time series analysis. From a climate science perspective, the study is rooted in the understanding of anthropogenic influences on global temperature changes, as articulated in theories such as the greenhouse gas effect and the feedback mechanisms of climate systems. These theories suggest that human activities, particularly fossil fuel combustion and deforestation, contribute to increased concentrations of greenhouse gases, which in turn lead to global warming. Time series analysis provides the statistical tools necessary to examine patterns over time, identify trends, and decompose temperature changes into components such as seasonality, trends, and residuals. The application of these frameworks enables a structured approach to analyzing the data, ensuring that observed patterns are interpreted within the broader context of known climate dynamics and statistical rigor. Despite the extensive body of research on climate change, several gaps remain that this study aims to address:</p>
 <ul>
-<li><a href="./proj1.html">March Madness Predictions with Random Forest</a></li>
-<li><a href="./climateChangeVisualizations.html">Climate Change Visualizations and Forecasting*</a></li>
-<li><a href="./CustomXgboostAlgo.html">Predicting CTR with Custom Xgboost Algorithm*</a></li>
-<li>Spatiotemporal Crime Analysis in Buffalo* (Capstone Project) | <a href="researchproject.pdf">LaTeX Version here!</a></li>
+<li>Regional Variability: While global temperature trends are well-documented, there is less emphasis on regional or continental differences in temperature change trends. This study provides a comparative analysis of temperature changes across different areas, highlighting spatial disparities.</li>
+<li>Decadal Comparisons: Few studies delve into the differences in temperature change patterns across decades. By examining these changes, this research seeks to identify whether certain periods experienced more rapid temperature shifts and what factors might have contributed.</li>
+<li>Visualization of Trends: Although raw data is often presented, there is a lack of accessible and clear visual representations of how temperature has evolved across different regions and timeframes. This project addresses this by emphasizing visualizations that are intuitive and informative.</li>
 </ul>
-<p>(* - File Conversion/Revision in Progress)</p>
+</section>
+<section id="data-cleaning-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning-preparation">Data Cleaning &amp; Preparation</h2>
+<p>The dataset initially includes 66 columns, with the area and area code, month and month code, element of Standard Deviation or Temperature change, as well as unit column. The rest of the columns hold the data for a single year, from 1961-2019. I started with getting rid of the month and area code columns, as well as the unit and element code, as I will not be using these in the analysis. From here I filtered out the Temperature change data from the element category and then removed that column as it is no longer needed and they are all temperature change. From here, I noticed that there was instances in the Month column that were three months combined, for example “Dec Jan Feb”. These instances correlated to seasons in the specific year. Due to the way it was encoded, it was hard to figure out how to rename these instances, but eventually, it was decided to convert the month’s column from UTF-8 format into ASCII, substituting the Unknown symbol for nothing, leaving us with the example to know equal “DecJanFeb.” From here it was much easier to handle, so I then remapped the instances to their respective season allowing the dataset to appear a lot more clear. From here the data is a lot easier to work on, with a column for area, month, and then the years with the data. I then converted the data into a long format to make it more linear, and easier to plot and compare the different areas to each other. I combined the year columns into two columns, one for the year, and the second for the temperature change values, so now our dataset has the four variables that we need.</p>
+<p><strong>Imputation of NA values</strong></p>
+<p>From here, the next issue to address was the missing values in the dataset. I kept the original in case I needed to check certain areas or years for NA values, and then imputed the missing values. The method of imputation was to group the data by area, and then by months (time period), and then used the mean of the grouped areas by month to fill in any NA values included. The data was then checked for any remaining NA values, where none were found. It was important to keep the NA data for later analysis, as it was found that certain areas lacked data before 1991 and all the values were imputed with mean, throwing off the analysis.</p>
+<p><strong>Subset Creation</strong></p>
+<p>Once all the missing values were handled, I created subset datasets for the monthly, seasonal, and yearly data. This will allow me to analyze different aspects using the different data as needed. Due to the sheer size of the dataset, most plots and modeling had to be done on the seasonal data as opposed to the monthly data for clarity.</p>
+</section>
+<section id="exploratory-data-analysis-eda" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</h2>
+<p>To start the analysis and determine areas most and least volatile across the time period, average temperature change for each area was calculated and stored in a dataframe. To decrease the amount of noise and randomness in the averages, I used the yearly data for this tasks. The data was grouped by areas, calculating the average and max temperature change in the area across the years, this new data was then placed in a dataframe sorted by descending average. This gave me a table that shows the areas and the average temperature change through the years, allowing me to see which areas might be the best to analyze in terms of climate change severity. This was then repeated only using data from the latest 20 years to determine if there is any significant difference from the results obtained using all of the data.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="time-series-decomposition-selected-areas" class="level2">
+<h2 class="anchored" data-anchor-id="time-series-decomposition-selected-areas">Time Series Decomposition (Selected Areas)</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-9.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-5-10.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="comparative-visualizations" class="level2">
+<h2 class="anchored" data-anchor-id="comparative-visualizations">Comparative Visualizations</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="global-trend-and-forecasting" class="level2">
+<h2 class="anchored" data-anchor-id="global-trend-and-forecasting">Global Trend and Forecasting</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-7-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="decadal-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="decadal-comparison">Decadal Comparison</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="climateChangeVisualizations_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

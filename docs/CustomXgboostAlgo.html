@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Data Science Projects – Cole Rauscher - Data Science &amp; Marketing</title>
+<title>Custom XGBoost Implementation – Cole Rauscher - Data Science &amp; Marketing</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -112,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./projects.html">Data Science Projects</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./CustomXgboostAlgo.html">Predicting CTR with Custom Xgboost Algorithm</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -126,7 +126,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./projects.html" class="sidebar-item-text sidebar-link active">
+  <a href="./projects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Data Science Projects</span></a>
   </div>
 </li>
@@ -144,7 +144,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./CustomXgboostAlgo.html" class="sidebar-item-text sidebar-link">
+  <a href="./CustomXgboostAlgo.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Predicting CTR with Custom Xgboost Algorithm</span></a>
   </div>
 </li>
@@ -153,15 +153,28 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background">Background</a></li>
+  <li><a href="#data-cleaning-preparation" id="toc-data-cleaning-preparation" class="nav-link" data-scroll-target="#data-cleaning-preparation">Data Cleaning &amp; Preparation</a></li>
+  <li><a href="#exploratory-data-analysis-eda" id="toc-exploratory-data-analysis-eda" class="nav-link" data-scroll-target="#exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</a></li>
+  <li><a href="#methodology" id="toc-methodology" class="nav-link" data-scroll-target="#methodology">Methodology</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Data Science Projects</h1>
+<h1 class="title">Custom XGBoost Implementation</h1>
 </div>
 
 
@@ -178,18 +191,132 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Here you’ll find a curated collection of the projects I’ve worked on — from predictive modeling and marketing analytics to interactive dashboards and machine learning workflows.</p>
-<p>I’m passionate about using data to uncover patterns, drive smarter decisions, and tell compelling stories. Whether it’s building classification models for NCAA predictions, analyzing consumer behavior, or mapping crime trends, I enjoy blending technical skill with creative problem-solving.</p>
-<p>These projects reflect not just what I’ve learned, but how I think — with curiosity, clarity, and a drive to build things that are both insightful and actionable.</p>
-<ul>
-<li><a href="./proj1.html">March Madness Predictions with Random Forest</a></li>
-<li><a href="./climateChangeVisualizations.html">Climate Change Visualizations and Forecasting*</a></li>
-<li><a href="./CustomXgboostAlgo.html">Predicting CTR with Custom Xgboost Algorithm*</a></li>
-<li>Spatiotemporal Crime Analysis in Buffalo* (Capstone Project) | <a href="researchproject.pdf">LaTeX Version here!</a></li>
-</ul>
-<p>(* - File Conversion/Revision in Progress)</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+</section>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+</section>
+<section id="data-cleaning-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning-preparation">Data Cleaning &amp; Preparation</h2>
+<p>load data, make factor</p>
+</section>
+<section id="exploratory-data-analysis-eda" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</h2>
+<p>x</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="CustomXgboostAlgo_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="CustomXgboostAlgo_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="CustomXgboostAlgo_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="CustomXgboostAlgo_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="CustomXgboostAlgo_files/figure-html/unnamed-chunk-2-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="CustomXgboostAlgo_files/figure-html/unnamed-chunk-2-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="methodology" class="level2">
+<h2 class="anchored" data-anchor-id="methodology">Methodology</h2>
+<p>x</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>x</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>Round 1: Focal Loss = 1.3648
+Round 2: Focal Loss = 0.2053
+Round 3: Focal Loss = 2.0073
+Round 4: Focal Loss = 1.3039
+Round 5: Focal Loss = 0.9250
+Round 6: Focal Loss = 0.3758
+Round 7: Focal Loss = 0.4977
+Early stopping...</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Confusion Matrix and Statistics
+
+          Reference
+Prediction     0     1
+         0  5182   620
+         1 11286  2912
+                                          
+               Accuracy : 0.4047          
+                 95% CI : (0.3979, 0.4115)
+    No Information Rate : 0.8234          
+    P-Value [Acc &gt; NIR] : 1               
+                                          
+                  Kappa : 0.0636          
+                                          
+ Mcnemar's Test P-Value : &lt;2e-16          
+                                          
+            Sensitivity : 0.3147          
+            Specificity : 0.8245          
+         Pos Pred Value : 0.8931          
+         Neg Pred Value : 0.2051          
+             Prevalence : 0.8234          
+         Detection Rate : 0.2591          
+   Detection Prevalence : 0.2901          
+      Balanced Accuracy : 0.5696          
+                                          
+       'Positive' Class : 0               
+                                          </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="CustomXgboostAlgo_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>x</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>x</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -1,0 +1,192 @@
+---
+title: "Climate Change Visualizations"
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(readr)
+library(ggplot2)
+library(aTSA)
+library(car)
+```
+
+## Introduction
+
+Climate change has become a clear issue in today's world, with its significance rising more and more each day, and it’s effects becoming more and more clear. In this project, data of temperature changes in Countries, Continents, and the world as a whole were analyzed and explored to answer the following research questions, how have temperature change trends differed in different areas across the world, and are there significant differences in temperature changes across decades? In this study, I hope to visualize temperature changes across the areas clearly and inspect the different components involved, such as seasonality and the trend of the temperature change. Hopefully, in doing this I can help people to understand the significance of the issue and how bad it really is, if bad at all. This is important due to the rising evidence of the significance of the issue, with temperatures changing rapidly, and acting much differently than in the past, it is clear that something is going on but it’s very hard to understand why, or what it is doing. Visualizing the trends of temperature change, especially from the past, all the way back to the sixties will help people understand what the temperature is actually doing, and reshape the issue in their heads. 
+
+## Background
+
+The data used in this project comes from a Kaggle dataset containing temperature change data from all across the world, including data on the world, continents, and groups of countries between the years 1961-2020. The analysis used in the dataset includes time series analysis and simple data exploration exploring the values, and years, and finding any relationships or correlations within them. Considering the simplicity of the data, there isn’t much analysis to be done with it but rather a large depth of exploration that is possible. The analysis used in this project is mainly for exploration purposes, dissecting temperature change over time and visualizing the changes and differences that are present, as well as in different areas across the world over time, allowing us to see if there are any consistencies across locations. 
+This research is guided by the principles of climate science and time series analysis. From a climate science perspective, the study is rooted in the understanding of anthropogenic influences on global temperature changes, as articulated in theories such as the greenhouse gas effect and the feedback mechanisms of climate systems. These theories suggest that human activities, particularly fossil fuel combustion and deforestation, contribute to increased concentrations of greenhouse gases, which in turn lead to global warming. Time series analysis provides the statistical tools necessary to examine patterns over time, identify trends, and decompose temperature changes into components such as seasonality, trends, and residuals.
+The application of these frameworks enables a structured approach to analyzing the data, ensuring that observed patterns are interpreted within the broader context of known climate dynamics and statistical rigor.
+Despite the extensive body of research on climate change, several gaps remain that this study aims to address:
+
+- Regional Variability: While global temperature trends are well-documented, there is less emphasis on regional or continental differences in temperature change trends. This study provides a comparative analysis of temperature changes across different areas, highlighting spatial disparities.
+- Decadal Comparisons: Few studies delve into the differences in temperature change patterns across decades. By examining these changes, this research seeks to identify whether certain periods experienced more rapid temperature shifts and what factors might have contributed.
+- Visualization of Trends: Although raw data is often presented, there is a lack of accessible and clear visual representations of how temperature has evolved across different regions and timeframes. This project addresses this by emphasizing visualizations that are intuitive and informative.
+
+
+## Data Cleaning & Preparation
+
+The dataset initially includes 66 columns, with the area and area code, month and month code, element of Standard Deviation or Temperature change, as well as unit column. The rest of the columns hold the data for a single year, from 1961-2019. I started with getting rid of the month and area code columns, as well as the unit and element code, as I will not be using these in the analysis. From here I filtered out the Temperature change data from the element category and then removed that column as it is no longer needed and they are all temperature change. From here, I noticed that there was instances in the Month column that were three months combined, for example "Dec Jan Feb". These instances correlated to seasons in the specific year. Due to the way it was encoded, it was hard to figure out how to rename these instances, but eventually, it was decided to convert the month's column from UTF-8 format into ASCII,  substituting the Unknown symbol for nothing, leaving us with the example to know equal “DecJanFeb.” From here it was much easier to handle, so I then remapped the instances to their respective season allowing the dataset to appear a lot more clear. 
+From here the data is a lot easier to work on, with a column for area, month, and then the years with the data. I then converted the data into a long format to make it more linear, and easier to plot and compare the different areas to each other. I combined the year columns into two columns, one for the year, and the second for the temperature change values, so now our dataset has the four variables that we need.  
+
+
+```{r, include=FALSE}
+orig_data <- read_csv("C:\\Users\\colem\\OneDrive\\Documents\\RDirectory\\Data exploration\\Data exploration\\archive (3)\\Environment_Temperature_change_E_All_Data_NOFLAG.csv")
+orig_data <- orig_data %>%
+  filter(Element == "Temperature change") %>%
+  select(-c(1, 3, 5, 6, 7)) %>%
+  mutate(
+    Months = iconv(Months, from = "UTF-8", to = "ASCII", sub = ""),
+    Months = case_when(
+      Months == "DecJanFeb" ~ "Winter",
+      Months == "MarAprMay" ~ "Spring",
+      Months == "JunJulAug" ~ "Summer",
+      Months == "SepOctNov" ~ "Fall",
+      TRUE ~ Months
+    )
+  )
+dataLong <- orig_data %>%
+  pivot_longer(cols = starts_with("y"), names_to = "Year", values_to = "Temperature_change") %>%
+  mutate(Year = str_remove(Year, "^Y")) %>%
+  arrange(Year)
+```
+
+**Imputation of NA values**
+
+From here, the next issue to address was the missing values in the dataset. I kept the original in case I needed to check certain areas or years for NA values, and then imputed the missing values. The method of imputation was to group the data by area, and then by months (time period), and then used the mean of the grouped areas by month to fill in any NA values included. The data was then checked for any remaining NA values, where none were found. It was important to keep the NA data for later analysis, as it was found that certain areas lacked data before 1991 and all the values were imputed with mean, throwing off the analysis. 
+
+```{r, include=FALSE}
+data <- dataLong %>%
+  group_by(Area, Months) %>%
+  mutate(Temperature_change = ifelse(is.na(Temperature_change),
+                                     mean(Temperature_change, na.rm = TRUE),
+                                     Temperature_change)) %>%
+  ungroup()
+```
+
+**Subset Creation**
+
+Once all the missing values were handled, I created subset datasets for the monthly, seasonal, and yearly data. This will allow me to analyze different aspects using the different data as needed. Due to the sheer size of the dataset, most plots and modeling had to be done on the seasonal data as opposed to the monthly data for clarity. 
+
+```{r, include=FALSE}
+dataYearly <- filter(data, Months=="Meteorological year") %>% select(-Months)
+dataSeason <- filter(data, Months %in% c("Winter", "Spring", "Summer", "Fall"))
+dataMonth <- filter(data, Months %in% month.name)
+```
+
+## Exploratory Data Analysis (EDA)
+
+To start the analysis and determine areas most and least volatile across the time period, average temperature change for each area was calculated and stored in a dataframe. To decrease the amount of noise and randomness in the averages, I used the yearly data for this tasks. The data was grouped by areas, calculating the average and max temperature change in the area across the years, this new data was then placed in a dataframe sorted by descending average. This gave me a table that shows the areas and the average temperature change through the years, allowing me to see which areas might be the best to analyze in terms of climate change severity. This was then repeated only  using data from the latest 20 years to determine if there is any significant difference from the results obtained using all of the data.
+
+```{r, echo=FALSE}
+averages <- dataYearly %>%
+  group_by(Area) %>%
+  summarize(avgChange = mean(Temperature_change, na.rm = TRUE),
+            maxChange = max(Temperature_change, na.rm = TRUE)) %>%
+  arrange(desc(avgChange))
+
+recentAverages <- dataYearly %>%
+  filter(Year %in% c(1999:2019)) %>%
+  group_by(Area) %>%
+  summarize(avgChange = mean(Temperature_change, na.rm = TRUE),
+            maxChange = max(Temperature_change, na.rm = TRUE)) %>%
+  arrange(desc(avgChange))
+
+plot <- head(averages, 15)
+barplot(avgChange ~ Area, data = plot, main = "Barplot of Highest Avg Changes", ylab = "Avg Change")
+```
+
+## Time Series Decomposition (Selected Areas)
+
+```{r, echo=FALSE}
+areas_of_interest <- list("Kuwait", "Svalbard and Jan Mayen Islands", "Slovenia", "Chile", "Mongolia")
+
+for (area in areas_of_interest) {
+  ts_data <- dataSeason %>% filter(Area == area) %>% pull(Temperature_change)
+  ts_obj <- ts(ts_data, start = 1961, frequency = 4)
+  decomp <- decompose(ts_obj)
+  plot(ts_obj, main = paste("Temperature Time Series for", area))
+  plot(decomp)  # Remove `main` argument here
+}
+```
+
+## Comparative Visualizations
+
+```{r, echo=FALSE}
+areas <- dataYearly %>% filter(Area %in% c("Chile", "Kuwait", "Mongolia", "Slovenia", "Svalbard and Jan Mayen Islands"))
+areas$Area <- ifelse(areas$Area == "Svalbard and Jan Mayen Islands", "Svalbard", areas$Area)
+
+# Boxplot
+p1 <- ggplot(areas, aes(x = Area, y = Temperature_change, fill = Area)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of Temperature Changes by Area") +
+  theme_minimal()
+p1
+
+# Line plot
+p2 <- ggplot(areas, aes(x = Year, y = Temperature_change, color = Area, group = Area)) +
+  geom_line() +
+  labs(title = "Line Plot of Temperature Changes Over Time") +
+  theme_minimal()
+p2
+
+# Density plot
+p3 <- ggplot(areas, aes(x = Temperature_change, fill = Area)) +
+  geom_density(alpha = 0.4) +
+  labs(title = "Density Plot of Temperature Changes by Area") +
+  theme_minimal()
+p3
+```
+
+## Global Trend and Forecasting
+
+```{r, echo=FALSE}
+numworld <- dataSeason %>% filter(Area=="World") %>% pull(Temperature_change)
+world <- ts(numworld, start = 1961, frequency = 4)
+plot(world, main = "Time Series of Global Temperature Change")
+
+decomp <- decompose(world)
+plot(decomp)
+
+# Forecasting with ARIMA
+model <- arima(world, order = c(1,1,1))
+forecast <- predict(model, n.ahead = 40)
+plot(world, xlim = c(1961, 2030))
+points(world - residuals(model), type = "l", col = 2, lty = 2)
+points(forecast$pred, type = "l", col = 2, lty = 2)
+points(forecast$pred - 2*forecast$se, type = "l", col = 2)
+points(forecast$pred + 2*forecast$se, type = "l", col = 2)
+```
+
+## Decadal Comparison
+
+```{r, echo=FALSE}
+yearworld <- dataYearly %>% filter(Area=="World") %>% select(Year, Temperature_change)
+yearworld <- rbind(data.frame(Year = "1960", Temperature_change = 0), yearworld)
+
+decades <- yearworld %>%
+  mutate(Decade = as.numeric(Year) %/% 10 * 10,
+         Year_in_Decade = as.numeric(Year) %% 10)
+
+decadeData <- decades %>%
+  mutate(Decade_Label = paste0(Decade, "s"))
+
+# Line Plot by Decade
+p4 <- ggplot(decadeData, aes(x = Year_in_Decade, y = Temperature_change, color = Decade_Label, group = Decade_Label)) +
+  geom_line() +
+  labs(title = "Temperature Change Over Decades") +
+  theme_minimal()
+p4
+```
+
+
+
+
+
+
+---
+

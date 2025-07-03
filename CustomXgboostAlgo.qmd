@@ -1,0 +1,288 @@
+---
+title: "Custom XGBoost Implementation"
+---
+
+
+```{r setup, include=FALSE}
+library(readr)
+library(data.table)
+library(dplyr)
+library(Matrix)
+library(caret)
+library(VIM)
+library(lubridate)
+library(ggplot2)
+library(parallel)
+library(fastDummies)
+```
+
+## Introduction
+
+## Background
+
+## Data Cleaning & Preparation
+
+load data, make factor
+
+```{r, include=FALSE}
+# Load sample of training data
+train_data <- fread("C:\\Users\\colem\\OneDrive\\Documents\\RDirectory\\Machine Learning\\train.gz", nrows = 100000)[, -1]
+
+# Store original
+train_orig <- train_data
+
+# Encode categorical variables
+label_encode <- function(data) {
+  data %>%
+    mutate(across(where(is.character), ~ as.integer(as.factor(.))))
+}
+train_data <- label_encode(as.data.frame(train_data))
+
+# Review structure
+str(train_data)
+summary(train_data)
+```
+
+## Exploratory Data Analysis (EDA)
+
+x
+
+```{r, echo=FALSE}
+# Target Distribution
+barplot(table(train_data$click), col = c("red", "green"), main = "Click Distribution")
+
+# Correlation
+cor_matrix <- round(cor(train_data[,-2]), 2)
+
+# Sample Visualizations
+ggplot(data=train_data, aes(x=C1, fill = as.factor(click))) + 
+  geom_bar(position="stack") + labs(title="C1 vs Click")
+
+ggplot(data=train_data, aes(x=banner_pos, fill = as.factor(click))) + 
+  geom_bar(position="stack") + labs(title="Banner Position vs Click")
+
+ggplot(data=train_data, aes(x=site_category, fill = as.factor(click))) + 
+  geom_bar(position="stack") + labs(title="Site Category vs Click")
+
+ggplot(data=train_data, aes(x=device_conn_type, fill = as.factor(click))) + 
+  geom_bar(position="stack") + labs(title="Connection Type vs Click")
+
+ggplot(data=train_data, aes(x=C14, fill = factor(click))) + 
+  geom_density(alpha = 0.5) + labs(title = "C14 Distribution by Click")
+
+```
+
+## Methodology
+
+x
+
+```{r, include=FALSE}
+# Drop high-cardinality cols
+train_data <- train_data[, -c(2,5,6,7,9,11,12,13,15)]
+
+# Dummy encoding
+train_data <- dummy_cols(train_data, 
+                         select_columns = c("C1", "banner_pos", "app_category", "device_type"))
+train_data <- train_data[, -c(2,3,5,6)]
+
+# Partition data
+set.seed(123)
+train_index <- createDataPartition(train_data$click, p = 0.8, list = FALSE)
+train_split <- train_data[train_index, ]
+test_split <- train_data[-train_index, ]
+
+X_train <- as.matrix(train_split[, -1])
+y_train <- train_split$click
+X_test  <- as.matrix(test_split[, -1])
+y_test  <- test_split$click
+
+scale_pos_weight <- sum(y_train == 0) / sum(y_train == 1)
+```
+
+```{r, include=FALSE}
+# Utility functions #####
+sigmoid <- function(x) {
+  1 / (1 + exp(-x))
+}
+focal_loss <- function(y_true, y_pred, gamma = 2) {
+  p_t <- ifelse(y_true == 1, y_pred, 1 - y_pred)
+  loss <- -sum((1 - p_t)^gamma * log(p_t + 1e-15)) / length(y_true)
+  return(loss)
+}
+compute_focal_gradients <- function(y_true, y_pred, gamma = 2, scale_pos_weight = 1) {
+  p_t <- ifelse(y_true == 1, y_pred, 1 - y_pred)
+  alpha_t <- ifelse(y_true == 1, scale_pos_weight, 1)
+  grad <- -alpha_t * (1 - p_t)^(gamma - 1) * (y_true - y_pred)
+  hess <- alpha_t * (1 - p_t)^(gamma - 1) * (p_t * (1 - p_t) - gamma * (y_true - y_pred) * log(p_t))
+  list(grad = grad, hess = hess)
+}
+compute_split_gain <- function(grad, hess, lambda = 1) {
+  if (sum(hess) == 0) return(-Inf) # Avoid division by zero
+  gain <- (sum(grad)^2) / (sum(hess) + lambda) #similarity score
+  return(gain)
+}
+calculate_leaf_weight <- function(grad, hess, lambda = 1) {
+  -sum(grad) / (sum(hess) + lambda)
+}
+find_best_split_parallel <- function(X, grad, hess, lambda = 1) {
+  num_cores <- detectCores() - 1
+  cluster <- makeCluster(num_cores)  # Create a cluster
+  
+  # Export necessary objects and functions to the cluster
+  clusterExport(cluster, varlist = c("X", "grad", "hess", "compute_split_gain"), envir = environment())
+  
+  best_splits <- parLapply(cluster, 1:ncol(X), function(j) {
+    unique_values <- quantile(X[, j], probs = seq(0, 1, length.out = 10), na.rm = TRUE)
+    best_gain <- -Inf
+    best_threshold <- NULL
+    
+    for (threshold in unique_values) {
+      left <- X[, j] <= threshold
+      right <- !left
+      
+      if (sum(left) > 0 && sum(right) > 0) {
+        left_gain <- compute_split_gain(grad[left], hess[left], lambda)
+        right_gain <- compute_split_gain(grad[right], hess[right], lambda)
+        
+        total_gain <- left_gain + right_gain
+        if (total_gain > best_gain) {
+          best_gain <- total_gain
+          best_threshold <- threshold
+        }
+      }
+    }
+    return(list(gain = best_gain, threshold = best_threshold))
+  })
+  
+  stopCluster(cluster)  # Stop the cluster
+  
+  # Combine results to find the best split
+  best_gain <- -Inf
+  best_feature <- NULL
+  best_threshold <- NULL
+  for (j in seq_along(best_splits)) {
+    if (best_splits[[j]]$gain > best_gain) {
+      best_gain <- best_splits[[j]]$gain
+      best_feature <- j
+      best_threshold <- best_splits[[j]]$threshold
+    }
+  }
+  
+  return(list(feature = best_feature, threshold = best_threshold, gain = best_gain))
+}
+build_tree <- function(X, grad, hess, depth, max_depth, lambda, gamma) {
+  if (depth >= max_depth || sum(hess) == 0) {
+    weight <- calculate_leaf_weight(grad, hess, lambda)
+    return(list(weight = weight))  # Leaf node
+  }
+  
+  split <- find_best_split_parallel(X, grad, hess, lambda)
+  if (is.null(split$feature) || split$gain < gamma) {
+    weight <- calculate_leaf_weight(grad, hess, lambda)
+    return(list(weight = weight))  # Prune if gain < gamma
+  }
+  
+  left <- X[, split$feature] <= split$threshold
+  right <- !left
+  
+  return(list(
+    feature = split$feature,
+    threshold = split$threshold,
+    left = build_tree(X[left, , drop = FALSE], grad[left], hess[left], depth + 1, max_depth, lambda, gamma),
+    right = build_tree(X[right, , drop = FALSE], grad[right], hess[right], depth + 1, max_depth, lambda, gamma)
+  ))
+}
+predict_tree <- function(tree, X) {
+  if (!is.null(tree$weight)) {
+    return(rep(tree$weight, nrow(X)))  # Leaf node
+  }
+  
+  left <- X[, tree$feature] <= tree$threshold
+  right <- !left
+  
+  pred <- numeric(nrow(X))
+  pred[left] <- predict_tree(tree$left, X[left, , drop = FALSE])
+  pred[right] <- predict_tree(tree$right, X[right, , drop = FALSE])
+  
+  return(pred)
+}
+# Training Loop
+gradient_boosting <- function(X_train, y_train, X_test, y_test, num_rounds = 50, learning_rate = 0.1, 
+                              max_depth = 2, lambda = 1, gamma = 0, focal_gamma = 2, 
+                              scale_pos_weight = 1, early_stop_rounds = 5) {
+  pred_train <- rep(0.5, nrow(X_train))  # Initialize predictions
+  best_loss <- Inf
+  no_improve <- 0
+  
+  for (i in 1:num_rounds) {
+    grad_hess <- compute_focal_gradients(y_train, pred_train, gamma = focal_gamma, scale_pos_weight = scale_pos_weight)
+    grad <- grad_hess$grad
+    hess <- grad_hess$hess
+    
+    tree <- build_tree(X_train, grad, hess, depth = 0, max_depth = max_depth, lambda = lambda, gamma = gamma)
+    pred_train <- sigmoid(pred_train + learning_rate * predict_tree(tree, X_train))
+    
+    # Calculate focal loss
+    loss <- focal_loss(y_train, pred_train, gamma = focal_gamma)
+    cat(sprintf("Round %d: Focal Loss = %.4f\n", i, loss))
+    
+    # Early stopping
+    if (loss < best_loss) {
+      best_loss <- loss
+      no_improve <- 0
+    } else {
+      no_improve <- no_improve + 1
+    }
+    
+    if (no_improve >= early_stop_rounds) {
+      cat("Early stopping...\n")
+      break
+    }
+  }
+  
+  # Final predictions
+  pred_test <- sigmoid(predict_tree(tree, X_test))
+  pred_class <- ifelse(pred_test > 0.5, 1, 0)
+  
+  return(list(pred_test = pred_test, pred_class = pred_class, final_tree = tree))
+}
+```
+
+## Results
+
+x
+
+```{r, echo=FALSE}
+# Run custom boosting
+result <- gradient_boosting(
+  X_train, y_train, X_test, y_test,
+  num_rounds = 50, learning_rate = 0.15, max_depth = 5,
+  lambda = 0.6, gamma = 3, scale_pos_weight = scale_pos_weight
+)
+predictions <- result$pred_class
+
+# Evaluate
+conf_matrix <- confusionMatrix(factor(predictions), factor(y_test))
+conf_matrix
+```
+
+```{r, echo=FALSE}
+# Plot heatmap of confusion matrix
+conf_matrix_df <- as.data.frame(as.table(conf_matrix))
+ggplot(conf_matrix_df, aes(Prediction, Reference, fill = Freq)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "blue") +
+  theme_minimal() +
+  labs(x = "Predicted", y = "Actual", fill = "Frequency") +
+  ggtitle("Confusion Matrix Heatmap")
+```
+
+## Discussion
+
+x
+
+## Conclusion
+
+x
+
+
