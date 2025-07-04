@@ -17,7 +17,7 @@ about:
       href: mailto:cole.rauscher@daemen.edu
     - icon: file-text
       text: "Resume"
-      href: finalfinalresume.pdf
+      href: finalresume.pdf
 ---
 
 :::{#hero-heading}
